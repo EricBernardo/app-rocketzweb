@@ -4,7 +4,7 @@ import 'normalize.css/normalize.css' // A modern alternative to CSS resets
 
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
-import locale from 'element-ui/lib/locale/lang/en' // lang i18n
+import locale from 'element-ui/lib/locale/lang/pt-br' // lang i18n
 
 import '@/styles/index.scss' // global css
 
@@ -24,8 +24,12 @@ import '@/permission' // permission control
  * mockXHR()
  */
 
+
+
 // set ElementUI lang to EN
 Vue.use(ElementUI, { locale })
+
+Vue.component('pagination', require('laravel-vue-pagination'));
 
 Vue.config.productionTip = false
 
