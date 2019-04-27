@@ -1,7 +1,7 @@
-import axios from 'axios'
-import { Message } from 'element-ui'
-import store from '@/store'
-import { getToken } from '@/utils/auth'
+import store from '@/store';
+import { getToken, removeToken } from '@/utils/auth';
+import axios from 'axios';
+import { Message } from 'element-ui';
 
 // create an axios instance
 const service = axios.create({
@@ -76,9 +76,9 @@ service.interceptors.response.use(
 
     let text = ''
 
-    if(error.response.status === 422) {
-      Object.values(error.response.data.errors).forEach(function(values) {
-        values.forEach(function(value) {
+    if (error.response.status === 422) {
+      Object.values(error.response.data.errors).forEach(function (values) {
+        values.forEach(function (value) {
           text += '<p>' + value + '</p>'
         })
       })
@@ -90,6 +90,17 @@ service.interceptors.response.use(
       duration: 5 * 1000,
       dangerouslyUseHTMLString: true
     })
+
+    if (error.response.status == 401) {
+
+      removeToken()
+
+      setTimeout(() => {
+        location.reload()
+      }, 1000);
+
+    }
+
     return Promise.reject(error)
   }
 )

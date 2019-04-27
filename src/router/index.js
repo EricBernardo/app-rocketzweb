@@ -1,10 +1,10 @@
-import Vue from 'vue'
-import Router from 'vue-router'
+/* Layout */
+import Layout from '@/layout';
+import Vue from 'vue';
+import Router from 'vue-router';
 
 Vue.use(Router)
 
-/* Layout */
-import Layout from '@/layout'
 
 /**
  * Note: sub-menu only appear when route children.length >= 1
@@ -154,13 +154,20 @@ export const constantRoutes = [
     children: [
       {
         path: '',
-        name: 'Company',
+        name: 'company',
         component: () => import('@/views/company/index'),
         meta: { title: 'Company', icon: 'form' }
       },
       {
         path: 'create',
+        name: 'company.create',
         component: () => import('@/views/company/create'),
+        hidden: true
+      },
+      {
+        path: 'edit/:id',
+        name: 'company.edit',
+        component: () => import('@/views/company/edit'),
         hidden: true
       }
     ]

@@ -1,20 +1,16 @@
-import Vue from 'vue'
-
-import 'normalize.css/normalize.css' // A modern alternative to CSS resets
-
-import ElementUI from 'element-ui'
-import 'element-ui/lib/theme-chalk/index.css'
-import locale from 'element-ui/lib/locale/lang/pt-br' // lang i18n
-
-import '@/styles/index.scss' // global css
-
-import App from './App'
-import store from './store'
-import router from './router'
-
-import '@/icons' // icon
-import '@/permission' // permission control
-
+import '@/icons'; // icon
+import '@/permission'; // permission control
+import '@/styles/index.scss'; // global css
+import ElementUI from 'element-ui';
+import locale from 'element-ui/lib/locale/lang/pt-br'; // lang i18n
+import 'element-ui/lib/theme-chalk/index.css';
+import 'normalize.css/normalize.css'; // A modern alternative to CSS resets
+import Vue from 'vue';
+import VueFormGenerator from 'vue-form-generator';
+import 'vue-form-generator/dist/vfg.css';
+import App from './App';
+import router from './router';
+import store from './store';
 /**
  * If you don't want to use mock-server
  * you want to use mockjs for request interception
@@ -27,6 +23,8 @@ import '@/permission' // permission control
 Vue.use(ElementUI, { locale })
 
 Vue.component('pagination', require('laravel-vue-pagination'))
+
+Vue.use(VueFormGenerator)
 
 Vue.config.productionTip = false
 

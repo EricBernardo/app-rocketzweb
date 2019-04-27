@@ -1,96 +1,88 @@
 <template>
   <div class="app-container">
-    <router-link to="/company/create">
-      <el-button type="success" class="right">Cadastrar</el-button>
+    <router-link :to="{ name: 'company.create' }">
+      <el-button type="success" class="pull-right m-b-10" size="mini">Cadastrar</el-button>
     </router-link>
+
     <el-table
       v-loading="listLoading"
       :data="list.data"
-      element-loading-text="Loading"
-      border
-      fit
-      highlight-current-row
-    >
+      element-loading-text="Carregando..."
+      border>
       <el-table-column align="center" label="ID" width="95">
         <template slot-scope="scope">
           {{ scope.row.id }}
         </template>
       </el-table-column>
-      <el-table-column label="Title">
+      <el-table-column label="Título">
         <template slot-scope="scope">
           {{ scope.row.title }}
         </template>
       </el-table-column>
+      <el-table-column label="-">
+        <template slot-scope="scope">
+          <router-link :to="{ name: 'company.edit', params: { id: scope.row.id } }">
+            <el-button type="primary" size="mini">Editar</el-button>
+          </router-link>
+          <el-button type="danger" size="mini" @click.prevent="destroyData(scope.row.id)">Excluir</el-button>
+        </template>
+      </el-table-column>
     </el-table>
-    <pagination :data="list" @pagination-change-page="fetchData" />
+    <pagination :data="list" @pagination-change-page="fetchData">
+      <span slot="prev-nav">Anterior</span>
+      <span slot="next-nav">Próximo</span>
+    </pagination>
   </div>
 </template>
 
 <script>
-import { getList } from '@/api/company'
+  import { get, destroy } from '@/api/company';
+  import { MessageBox } from 'element-ui'
 
-export default {
-  filters: {
-    statusFilter(status) {
-      const statusMap = {
-        published: 'success',
-        draft: 'gray',
-        deleted: 'danger'
+  export default {
+    filters: {
+      statusFilter(status) {
+        const statusMap = {
+          published: 'success',
+          draft: 'gray',
+          deleted: 'danger'
+        }
+        return statusMap[status]
       }
-      return statusMap[status]
-    }
-  },
-  data() {
-    return {
-      list: {},
-      listLoading: true
-    }
-  },
-  created() {
-    this.fetchData()
-  },
-  methods: {
-    fetchData(page = 1) {
-      this.listLoading = true
-      var params = {
-        page: page
+    },
+    data() {
+      return {
+        list: {},
+        listLoading: true
       }
-      getList(params).then(response => {
-        this.list = response.data
-        this.listLoading = false
-      })
+    },
+    created() {
+      this.fetchData()
+    },
+    methods: {
+      fetchData(page = 1) {
+        this.listLoading = true
+        var params = {
+          page: page
+        }
+        get(params).then(response => {
+          this.list = response.data
+          this.listLoading = false
+        })
+      },
+      destroyData(id) {
+
+        MessageBox.confirm('Desejas realmente excluir esse registro?', 'Atenção', {
+          confirmButtonText: 'Confirmar',
+          cancelButtonText: 'Cancelar',
+          type: 'warning'
+        }).then(() => {
+          destroy(id).then(response => {
+            this.fetchData(1)
+          })
+        })
+
+      }
     }
   }
-}
 </script>
-
-<style>
-  .pagination {
-    display: inline-block;
-    padding-left: 0;
-    margin: 20px 0;
-    border-radius: 4px;
-  }
-  .pagination > li {
-    display: inline;
-  }
-  .pagination > li > a,
-  .pagination > li > span {
-    position: relative;
-    float: left;
-    padding: 6px 12px;
-    margin-left: -1px;
-    line-height: 1.42857143;
-    color: #337ab7;
-    text-decoration: none;
-    background-color: #fff;
-    border: 1px solid #ddd;
-  }
-  .pagination-page-nav.active a {
-    background-color: #304156;
-    color: #fff;
-  }
-  .right{
-    float: right;
-  }
-</style>
