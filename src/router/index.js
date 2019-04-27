@@ -153,10 +153,15 @@ export const constantRoutes = [
     component: Layout,
     children: [
       {
-        path: 'index',
+        path: '',
         name: 'Company',
         component: () => import('@/views/company/index'),
         meta: { title: 'Company', icon: 'form' }
+      },
+      {
+        path: 'create',
+        component: () => import('@/views/company/create'),
+        hidden: true
       }
     ]
   },

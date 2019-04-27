@@ -1,5 +1,8 @@
 <template>
   <div class="app-container">
+    <router-link to="/company/create">
+      <el-button type="success" class="right">Cadastrar</el-button>
+    </router-link>
     <el-table
       v-loading="listLoading"
       :data="list.data"
@@ -39,7 +42,7 @@ export default {
   },
   data() {
     return {
-      list: null,
+      list: {},
       listLoading: true
     }
   },
@@ -86,5 +89,8 @@ export default {
   .pagination-page-nav.active a {
     background-color: #304156;
     color: #fff;
+  }
+  .right{
+    float: right;
   }
 </style>

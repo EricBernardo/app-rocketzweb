@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { MessageBox, Message } from 'element-ui'
+import { Message } from 'element-ui'
 import store from '@/store'
 import { getToken } from '@/utils/auth'
 
@@ -44,7 +44,7 @@ service.interceptors.response.use(
    */
   response => {
 
-    return response;
+    return response
 
     // // if the custom code is not 20000, it is judged as an error.
     // if (res.code !== 20000) {
@@ -74,10 +74,21 @@ service.interceptors.response.use(
   },
   error => {
 
+    let text = ''
+
+    if(error.response.status === 422) {
+      Object.values(error.response.data.errors).forEach(function(values) {
+        values.forEach(function(value) {
+          text += '<p>' + value + '</p>'
+        })
+      })
+    }
+
     Message({
-      message: error.message,
+      message: error.response.data.message + text,
       type: 'error',
-      duration: 5 * 1000
+      duration: 5 * 1000,
+      dangerouslyUseHTMLString: true
     })
     return Promise.reject(error)
   }

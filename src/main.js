@@ -23,13 +23,10 @@ import '@/permission' // permission control
  * import { mockXHR } from '../mock'
  * mockXHR()
  */
-
-
-
 // set ElementUI lang to EN
 Vue.use(ElementUI, { locale })
 
-Vue.component('pagination', require('laravel-vue-pagination'));
+Vue.component('pagination', require('laravel-vue-pagination'))
 
 Vue.config.productionTip = false
 

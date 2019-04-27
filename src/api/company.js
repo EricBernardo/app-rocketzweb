@@ -4,6 +4,14 @@ export function getList(params) {
   return request({
     url: '/company',
     method: 'get',
-    params: params,
+    params: params
+  })
+}
+
+export function create(params) {
+  return request({
+    url: '/company',
+    method: 'post',
+    data: params
   })
 }
