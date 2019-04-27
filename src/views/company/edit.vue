@@ -11,12 +11,11 @@
 <script>
 
   import { show, update } from '@/api/company'
-  import { Message } from 'element-ui'
 
   export default {
     data() {
       return {
-        isValid: true,
+        isValid: false,
         loading: false,
         schema: {
           fields: [
@@ -61,12 +60,11 @@
         if (this.isValid) {
           this.loading = true
           update(this.model, this.$route.params.id).then(response => {
-            Message({
+            this.$message({
               message: 'Atualização realizada com sucesso',
               type: 'success',
               duration: 5 * 1000
             })
-            this.isValid = false
           }).finally(responde => {
             this.loading = false
           })

@@ -156,7 +156,7 @@ export const constantRoutes = [
         path: '',
         name: 'company',
         component: () => import('@/views/company/index'),
-        meta: { title: 'Company', icon: 'form' }
+        meta: { title: 'Empresa', icon: 'form' }
       },
       {
         path: 'create',

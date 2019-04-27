@@ -4,16 +4,7 @@
       <el-button type="success" class="pull-right m-b-10" size="mini">Cadastrar</el-button>
     </router-link>
 
-    <el-table
-      v-loading="listLoading"
-      :data="list.data"
-      element-loading-text="Carregando..."
-      border>
-      <el-table-column align="center" label="ID" width="95">
-        <template slot-scope="scope">
-          {{ scope.row.id }}
-        </template>
-      </el-table-column>
+    <el-table v-loading="listLoading" :data="list.data" element-loading-text="Carregando..." border>
       <el-table-column label="Título">
         <template slot-scope="scope">
           {{ scope.row.title }}
@@ -37,7 +28,6 @@
 
 <script>
   import { get, destroy } from '@/api/company';
-  import { MessageBox } from 'element-ui'
 
   export default {
     filters: {
@@ -53,7 +43,7 @@
     data() {
       return {
         list: {},
-        listLoading: true
+        listLoading: false
       }
     },
     created() {
@@ -61,25 +51,29 @@
     },
     methods: {
       fetchData(page = 1) {
+
         this.listLoading = true
-        var params = {
-          page: page
-        }
+
+        var params = { page: page }
+
         get(params).then(response => {
           this.list = response.data
           this.listLoading = false
         })
+
       },
       destroyData(id) {
 
-        MessageBox.confirm('Desejas realmente excluir esse registro?', 'Atenção', {
+        this.$confirm('Desejas realmente excluir esse registro?', 'Atenção', {
           confirmButtonText: 'Confirmar',
           cancelButtonText: 'Cancelar',
           type: 'warning'
         }).then(() => {
           destroy(id).then(response => {
-            this.fetchData(1)
+            this.fetchData()
           })
+        }).catch(() => {
+
         })
 
       }
