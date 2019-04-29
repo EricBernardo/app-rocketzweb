@@ -114,6 +114,10 @@ div:focus {
   margin-bottom: 10px!important;
 }
 
+.form-group.error input:not([type=checkbox]), .form-group.error select, .form-group.error textarea{
+  background-color: transparent!important;
+}
+
 @media only screen and (max-width: 600px) {
   .el-message {
     min-width: 80%;

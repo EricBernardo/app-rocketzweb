@@ -37,6 +37,62 @@ export default {
             model: "title",
             required: true,
             validator: "string"
+          },
+          {
+            type: "input",
+            inputType: "text",
+            label: "Endereço",
+            model: "address",
+            required: true,
+            validator: "string"
+          },
+          {
+            type: "input",
+            inputType: "text",
+            label: "CEP",
+            model: "cep",
+            required: true,
+            validator: "string"
+          },
+          {
+            type: "input",
+            inputType: "text",
+            label: "Estado",
+            model: "state_id",
+            required: true,
+            validator: "string"
+          },
+          {
+            type: "input",
+            inputType: "text",
+            label: "Cidade",
+            model: "city_id",
+            required: true,
+            validator: "string"
+          },
+          {
+            type: "input",
+            inputType: "text",
+            label: "CNPJ",
+            model: "cnpj",
+            required: true,
+            validator: "string"
+          },
+          {
+            type: "input",
+            inputType: "text",
+            label: "Bairro",
+            model: "neighborhood",
+            required: true,
+            validator: "string"
+          },
+          {
+            type: "input",
+            inputType: "text",
+            label: "Número",
+            model: "number",
+            required: true,
+            validator: "string"
           }
         ]
       },
@@ -45,7 +101,14 @@ export default {
         validateAfterChanged: true
       },
       model: {
-        title: " "
+        title: " ",
+        address: " ",
+        cep: " ",
+        state_id: " ",
+        city_id: " ",
+        cnpj: " ",
+        neighborhood: " ",
+        number: " "
       }
     };
   },

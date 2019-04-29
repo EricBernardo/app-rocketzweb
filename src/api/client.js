@@ -1,10 +1,10 @@
 import request from '@/utils/request';
 
-export function get(params) {
+export function get(data) {
   return request({
     url: '/client',
     method: 'get',
-    params: params
+    data
   })
 }
 
@@ -15,19 +15,19 @@ export function show(id) {
   })
 }
 
-export function create(params) {
+export function create(data) {
   return request({
     url: '/client',
     method: 'post',
-    data: params
+    data
   })
 }
 
-export function update(params, id) {
+export function update(data, id) {
   return request({
     url: '/client/' + id,
     method: 'put',
-    params: params
+    data
   })
 }
 
