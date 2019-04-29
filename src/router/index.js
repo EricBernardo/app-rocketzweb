@@ -147,28 +147,58 @@ export const constantRoutes = [
   //     }
   //   ]
   // },
-
   {
     path: '/company',
     component: Layout,
+    meta: { title: 'Empresa', icon: 'form' },
     children: [
       {
         path: '',
         name: 'company',
         component: () => import('@/views/company/index'),
-        meta: { title: 'Empresa', icon: 'form' }
+        hidden: true
       },
       {
         path: 'create',
         name: 'company.create',
         component: () => import('@/views/company/create'),
-        hidden: true
+        hidden: true,
+        meta: { title: 'Cadastrar' }
       },
       {
         path: 'edit/:id',
         name: 'company.edit',
         component: () => import('@/views/company/edit'),
+        hidden: true,
+        meta: { title: 'Editar' }
+      }
+    ]
+  },
+
+  {
+    path: '/client',
+    component: Layout,
+    meta: { title: 'Cliente', icon: 'form' },
+    children: [
+      {
+        path: '',
+        name: 'client',
+        component: () => import('@/views/client/index'),
         hidden: true
+      },
+      {
+        path: 'create',
+        name: 'client.create',
+        component: () => import('@/views/client/create'),
+        hidden: true,
+        meta: { title: 'Cadastrar' }
+      },
+      {
+        path: 'edit/:id',
+        name: 'client.edit',
+        component: () => import('@/views/client/edit'),
+        hidden: true,
+        meta: { title: 'Editar' }
       }
     ]
   },

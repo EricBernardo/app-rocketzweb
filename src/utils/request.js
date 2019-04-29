@@ -43,7 +43,6 @@ service.interceptors.response.use(
    * You can also judge the status by HTTP Status Code
    */
   response => {
-
     return response
 
     // // if the custom code is not 20000, it is judged as an error.
@@ -73,31 +72,40 @@ service.interceptors.response.use(
     // }
   },
   error => {
-
     let text = ''
 
     if (error.response.status === 422) {
-      Object.values(error.response.data.errors).forEach(function (values) {
+      Object.values(error.response.data.errors).forEach(function (values, key) {
+
+        if (!key) {
+          text += '<hr style="height:1px;border:none;color:red;background-color:red;" />';
+        }
+
         values.forEach(function (value) {
           text += '<p>' + value + '</p>'
         })
+
       })
     }
 
     Message({
-      message: error.response.data.message + text,
+      message: '<b>' + error.response.data.message + '</b>' + text,
       type: 'error',
       duration: 5 * 1000,
       dangerouslyUseHTMLString: true
     })
 
-    if (error.response.status == 401) {
+    if (error.response.status === 401) {
 
       removeToken()
 
-      setTimeout(() => {
-        location.reload()
-      }, 1000);
+      if (location.hash.indexOf('login') === -1) {
+
+        setTimeout(() => {
+          location.reload()
+        }, 1000);
+
+      }
 
     }
 
