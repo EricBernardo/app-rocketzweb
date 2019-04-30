@@ -10,7 +10,6 @@
 
 <script>
   import { create } from '@/api/company'
-  import { Message } from 'element-ui'
 
   export default {
     data() {
@@ -44,7 +43,7 @@
         if (this.isValid) {
           this.loading = true
           create(this.model).then(response => {
-            Message({
+            this.$message({
               message: 'Cadastrado realizado com sucesso',
               type: 'success',
               duration: 5 * 1000
