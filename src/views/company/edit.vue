@@ -58,7 +58,6 @@ export default {
         .finally(responde => {
           this.loading = false;
         });
-
       event.preventDefault();
     }
   }

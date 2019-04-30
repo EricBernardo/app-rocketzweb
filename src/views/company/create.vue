@@ -35,21 +35,19 @@ export default {
   },
   methods: {
     onSubmit(event) {
-      if (this.isValid) {
-        this.loading = true;
-        create(this.form)
-          .then(response => {
-            this.$message({
-              message: "Cadastrado realizado com sucesso",
-              type: "success",
-              duration: 5 * 1000
-            });
-            this.model.title = "";
-          })
-          .finally(responde => {
-            this.loading = false;
+      this.loading = true;
+      create(this.form)
+        .then(response => {
+          this.$message({
+            message: "Cadastrado realizado com sucesso",
+            type: "success",
+            duration: 5 * 1000
           });
-      }
+          this.model.title = "";
+        })
+        .finally(responde => {
+          this.loading = false;
+        });
       event.preventDefault();
     }
   }
