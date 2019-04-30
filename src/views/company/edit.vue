@@ -1,79 +1,66 @@
 <template>
   <div class="app-container">
-    <vue-form-generator @validated="onValidated" :schema="schema" :model="model" :options="formOptions"></vue-form-generator>
-    <router-link to="/company" class="pull-left">
-      <el-button size="mini">Voltar</el-button>
-    </router-link>
-    <el-button size="mini" :loading="loading" type="primary" class="pull-right" :disabled="!isValid" @click.native.prevent="onSubmit">Salvar</el-button>
+    <el-form ref="form" :model="form">
+      <el-form-item label="Título">
+        <el-input v-model="form.title"/>
+      </el-form-item>
+      <el-form-item>
+        <router-link to="/company" class="pull-left">
+          <el-button size="mini">Voltar</el-button>
+        </router-link>
+        <el-button
+          size="mini"
+          :loading="loading"
+          type="primary"
+          class="pull-right"
+          :disabled="!this.form.title"
+          @click.native.prevent="onSubmit"
+        >Salvar</el-button>
+      </el-form-item>
+    </el-form>
   </div>
 </template>
 
 <script>
+import { show, update } from "@/api/company";
 
-  import { show, update } from '@/api/company'
-
-  export default {
-    data() {
-      return {
-        isValid: false,
-        loading: false,
-        schema: {
-          fields: [
-            {
-              type: 'input',
-              inputType: 'text',
-              label: 'Título',
-              model: 'title',
-              required: true,
-              validator: 'string'
-            }
-          ]
-        },
-        formOptions: {
-          validateAfterLoad: true,
-          validateAfterChanged: true,
-        },
-        model: {
-          title: ' '
-        }
+export default {
+  data() {
+    return {
+      loading: false,
+      form: {
+        title: ""
       }
-    },
-    created() {
+    };
+  },
+  created() {
+    this.loading = true;
 
-      this.loading = true
+    show(this.$route.params.id).then(response => {
+      Object.keys(this.form).forEach(key => {
+        this.form[key] = response.data.data[key];
+      });
 
-      show(this.$route.params.id).then(response => {
-
-        Object.keys(this.model).forEach(key => {
-          this.model[key] = response.data.data[key]
+      this.loading = false;
+    });
+  },
+  methods: {
+    onSubmit(event) {
+      this.loading = true;
+      update(this.form, this.$route.params.id)
+        .then(response => {
+          this.$message({
+            message: "Atualização realizada com sucesso",
+            type: "success",
+            duration: 5 * 1000
+          });
         })
+        .finally(responde => {
+          this.loading = false;
+        });
 
-        this.loading = false
-
-        this.isValid = true
-
-      })
-
-    },
-    methods: {
-      onSubmit(event) {
-        if (this.isValid) {
-          this.loading = true
-          update(this.model, this.$route.params.id).then(response => {
-            this.$message({
-              message: 'Atualização realizada com sucesso',
-              type: 'success',
-              duration: 5 * 1000
-            })
-          }).finally(responde => {
-            this.loading = false
-          })
-        }
-        event.preventDefault()
-      },
-      onValidated(isValid) {
-        this.isValid = isValid
-      }
+      event.preventDefault();
     }
   }
+};
 </script>

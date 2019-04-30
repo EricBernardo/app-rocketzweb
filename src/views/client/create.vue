@@ -4,7 +4,8 @@
       @validated="onValidated"
       :schema="schema"
       :model="model"
-      :options="formOptions"></vue-form-generator>
+      :options="formOptions"
+    ></vue-form-generator>
     <router-link :to="{ name: 'client' }" class="pull-left">
       <el-button size="mini">Voltar</el-button>
     </router-link>
@@ -14,151 +15,158 @@
       type="primary"
       class="pull-right"
       :disabled="!isValid"
-      @click.native.prevent="onSubmit">Salvar</el-button>
+      @click.native.prevent="onSubmit"
+    >Salvar</el-button>
   </div>
 </template>
 
 <script>
+import { getCities } from "@/api/city";
+import { create } from "@/api/client";
+import { getStates } from "@/api/state";
 
-  import { getCities } from "@/api/city";
-  import { create } from "@/api/client";
-  import { getStates } from "@/api/state";
-
-  export default {
-    data() {
-      return {
-        isValid: false,
-        loading: false,
-        states: [],
-        cities: [],
-        schema: {
-          fields: [
-            {
-              type: "input",
-              inputType: "text",
-              label: "Título",
-              model: "title",
-              required: true,
-              validator: "string"
-            },
-            {
-              type: "input",
-              inputType: "text",
-              label: "Endereço",
-              model: "address",
-              required: true,
-              validator: "string"
-            },
-            {
-              type: "input",
-              inputType: "text",
-              label: "CEP",
-              model: "cep",
-              required: true,
-              validator: "string"
-            },
-            {
-              type: "select",
-              label: "Estado",
-              model: "state_id",
-              required: true,
-              validator: "required",
-              values: (model) => {
-
-                if (model.state_id > 0) {
-                  getCities(model.state_id).then(response => {
-                    this.cities = response.data.data;
-                  });
-                }
-
-                return this.states
-
-              },
-              onChanged(model) {
-                model.city_id = '';
+export default {
+  data() {
+    return {
+      isValid: false,
+      loading: false,
+      states: [],
+      cities: [],
+      schema: {
+        fields: [
+          {
+            type: "input",
+            inputType: "text",
+            label: "Título",
+            model: "title",
+            required: true,
+            validator: "string"
+          },
+          {
+            type: "input",
+            inputType: "text",
+            label: "Endereço",
+            model: "address",
+            required: true,
+            validator: "string"
+          },
+          {
+            type: "input",
+            inputType: "text",
+            label: "CEP",
+            model: "cep",
+            required: true,
+            validator: "string"
+          },
+          {
+            type: "select",
+            label: "Estado",
+            model: "state_id",
+            required: true,
+            validator: "required",
+            values: (model, schema) => {
+              if (model.state_id > 0) {
+                getCities(model.state_id).then(response => {
+                  this.cities = response.data.data;
+                });
               }
+
+              return this.states;
             },
-            {
-              type: "select",
-              label: "Cidade",
-              model: "city_id",
-              required: true,
-              validator: "integer",
-              values: () => {
-                return this.cities
-              },
-            },
-            {
-              type: "input",
-              inputType: "text",
-              label: "CNPJ",
-              model: "cnpj",
-              required: true,
-              validator: "string"
-            },
-            {
-              type: "input",
-              inputType: "text",
-              label: "Bairro",
-              model: "neighborhood",
-              required: true,
-              validator: "string"
-            },
-            {
-              type: "input",
-              inputType: "text",
-              label: "Número",
-              model: "number",
-              required: true,
-              validator: "string"
+            onChanged(model) {
+              model.city_id = "";
             }
-          ]
-        },
-        formOptions: {
-          validateAfterLoad: true,
-          validateAfterChanged: true,
-          validateAsync: true
-        },
-        model: {
-          title: "",
-          address: "",
-          cep: "",
-          state_id: "",
-          city_id: "",
-          cnpj: "",
-          neighborhood: "",
-          number: ""
-        }
-      };
-    },
-    mounted() {
-      getStates().then(response => {
-        this.states = response.data.data;
-      })
-    },
-    methods: {
-      onSubmit(event) {
-        if (this.isValid) {
-          this.loading = true;
-          create(this.model)
-            .then(response => {
-              this.$message({
-                message: "Cadastrado realizado com sucesso",
-                type: "success",
-                duration: 5 * 1000
-              });
-              this.model.title = "";
-              this.isValid = false;
-            })
-            .finally(responde => {
-              this.loading = false;
-            });
-        }
-        event.preventDefault();
+          },
+          {
+            type: "select",
+            label: "Cidade",
+            model: "city_id",
+            required: true,
+            validator: "integer",
+            values: () => {
+              return this.cities;
+            }
+          },
+          {
+            type: "input",
+            inputType: "text",
+            label: "CNPJ",
+            model: "cnpj",
+            required: true,
+            validator: "string"
+          },
+          {
+            type: "input",
+            inputType: "text",
+            label: "Bairro",
+            model: "neighborhood",
+            required: true,
+            validator: "string"
+          },
+          {
+            type: "input",
+            inputType: "number",
+            label: "Número",
+            model: "number",
+            required: true,
+            validator: "integer"
+          }
+        ]
       },
-      onValidated(isValid) {
-        this.isValid = isValid;
+      formOptions: {
+        validateAfterLoad: true,
+        validateAfterChanged: true,
+        validateAsync: true
+      },
+      model: {
+        title: "",
+        address: "",
+        cep: "",
+        state_id: "",
+        city_id: "",
+        cnpj: "",
+        neighborhood: "",
+        number: ""
       }
+    };
+  },
+  mounted() {
+    getStates().then(response => {
+      this.states = response.data.data;
+    });
+  },
+  methods: {
+    onSubmit(event) {
+      if (this.isValid) {
+        this.loading = true;
+        create(this.model)
+          .then(response => {
+            this.$message({
+              message: "Cadastrado realizado com sucesso",
+              type: "success",
+              duration: 5 * 1000
+            });
+
+            this.title = "";
+            this.address = "";
+            this.cep = "";
+            this.state_id = "";
+            this.city_id = "";
+            this.cnpj = "";
+            this.neighborhood = "";
+            this.number = "";
+
+            this.isValid = false;
+          })
+          .finally(responde => {
+            this.loading = false;
+          });
+      }
+      event.preventDefault();
+    },
+    onValidated(isValid) {
+      this.isValid = isValid;
     }
-  };
+  }
+};
 </script>
