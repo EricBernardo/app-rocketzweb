@@ -1,22 +1,47 @@
 <template>
   <div class="app-container">
-    <vue-form-generator
-      @validated="onValidated"
-      :schema="schema"
-      :model="model"
-      :options="formOptions"
-    ></vue-form-generator>
-    <router-link to="/client" class="pull-left">
-      <el-button size="mini">Voltar</el-button>
-    </router-link>
-    <el-button
-      size="mini"
-      :loading="loading"
-      type="primary"
-      class="pull-right"
-      :disabled="!isValid"
-      @click.native.prevent="onSubmit"
-    >Salvar</el-button>
+    <el-form :model="form" :rules="rules" ref="form" label-width="120px">
+      <el-form-item label="Título" prop="title">
+        <el-input v-model="form.title"></el-input>
+      </el-form-item>
+      <el-form-item label="CEP" prop="cep">
+        <el-input v-model="form.cep"></el-input>
+      </el-form-item>
+      <el-form-item label="Estado" prop="state_id">
+        <el-select v-model="form.state_id" @change="getCities(true)">
+          <el-option v-for="item in states" :key="item.id" :label="item.name" :value="item.id"></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="Cidade" prop="city_id">
+        <el-select v-model="form.city_id">
+          <el-option v-for="item in cities" :key="item.id" :label="item.name" :value="item.id"></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="CNPJ" prop="cnpj">
+        <el-input v-model="form.cnpj"></el-input>
+      </el-form-item>
+      <el-form-item label="Bairro" prop="neighborhood">
+        <el-input v-model="form.neighborhood"></el-input>
+      </el-form-item>
+      <el-form-item label="Endereço" prop="address">
+        <el-input v-model="form.address"></el-input>
+      </el-form-item>
+      <el-form-item label="Número" prop="number">
+        <el-input v-model="form.number"></el-input>
+      </el-form-item>
+      <el-form-item>
+        <router-link to="/client" class="pull-left">
+          <el-button size="mini">Voltar</el-button>
+        </router-link>
+        <el-button
+          size="mini"
+          :loading="loading"
+          type="primary"
+          class="pull-right"
+          @click="onSubmit('form')"
+        >Salvar</el-button>
+      </el-form-item>
+    </el-form>
   </div>
 </template>
 
@@ -29,116 +54,25 @@ import { show, update } from "@/api/client";
 export default {
   data() {
     return {
-      isValid: false,
       loading: false,
       states: [],
       cities: [],
-      schema: {
-        fields: [
+      form: {
+        title: null,
+        address: null,
+        cep: null,
+        state_id: null,
+        city_id: null,
+        cnpj: null,
+        neighborhood: null,
+        number: null
+      },
+      rules: {
+        title: [
           {
-            type: "input",
-            inputType: "text",
-            label: "Título",
-            model: "title",
-            required: true,
-            validator: "string"
-          },
-          {
-            type: "input",
-            inputType: "text",
-            label: "Endereço",
-            model: "address",
-            required: true,
-            validator: "string"
-          },
-          {
-            type: "input",
-            inputType: "text",
-            label: "CEP",
-            model: "cep",
-            required: true,
-            validator: "string",
-            onChanged(model, schema, oldValue, field) {
-              let states = this.states;
-              console.log("model", model);
-              console.log("schema", schema);
-              let cep = model.cep.replace(/[a-z,A-Z]/g, "");
-
-              model.cep = cep;
-
-              if (cep.length >= 8) {
-                getCep(cep);
-              }
-            }
-          },
-          {
-            type: "select",
-            label: "Estado",
-            model: "state_id",
-            required: true,
-            validator: "required",
-            values: (model, schema, oldValue, field) => {
-              if (model.state_id > 0) {
-                getCities(model.state_id).then(response => {
-                  this.cities = response.data.data;
-                });
-              }
-
-              return this.states;
-            },
-            onChanged(model) {
-              model.city_id = "";
-            }
-          },
-          {
-            type: "select",
-            label: "Cidade",
-            model: "city_id",
-            required: true,
-            validator: "required",
-            values: () => {
-              return this.cities;
-            }
-          },
-          {
-            type: "input",
-            inputType: "text",
-            label: "CNPJ",
-            model: "cnpj",
-            required: true,
-            validator: "string"
-          },
-          {
-            type: "input",
-            inputType: "text",
-            label: "Bairro",
-            model: "neighborhood",
-            required: true,
-            validator: "string"
-          },
-          {
-            type: "input",
-            inputType: "text",
-            label: "Número",
-            model: "number",
-            required: true,
-            validator: "string"
+            required: true
           }
         ]
-      },
-      formOptions: {
-        validateAfterLoad: true,
-        validateAfterChanged: true
-      },
-      model: {
-        title: " ",
-        address: " ",
-        cep: " ",
-        state_id: " ",
-        city_id: " ",
-        cnpj: " ",
-        neighborhood: " ",
-        number: " "
       }
     };
   },
@@ -146,13 +80,13 @@ export default {
     this.loading = true;
 
     show(this.$route.params.id).then(response => {
-      Object.keys(this.model).forEach(key => {
-        this.model[key] = response.data.data[key];
+      Object.keys(this.form).forEach(key => {
+        this.form[key] = response.data.data[key];
+        if (key == "state_id") {
+          this.getCities();
+        }
       });
-
       this.loading = false;
-
-      this.isValid = true;
     });
 
     getStates().then(response => {
@@ -160,25 +94,33 @@ export default {
     });
   },
   methods: {
-    onSubmit(event) {
-      if (this.isValid) {
-        this.loading = true;
-        update(this.model, this.$route.params.id)
-          .then(response => {
-            this.$message({
-              message: "Atualização realizada com sucesso",
-              type: "success",
-              duration: 5 * 1000
+    onSubmit(formName) {
+      this.$refs[formName].validate(valid => {
+        if (valid) {
+          this.loading = true;
+          update(this.form, this.$route.params.id)
+            .then(response => {
+              this.$message({
+                message: "Atualização realizada com sucesso",
+                type: "success",
+                duration: 5 * 1000
+              });
+            })
+            .finally(responde => {
+              this.loading = false;
             });
-          })
-          .finally(responde => {
-            this.loading = false;
-          });
-      }
-      event.preventDefault();
+        } else {
+          return false;
+        }
+      });
     },
-    onValidated(isValid) {
-      this.isValid = isValid;
+    getCities(change = false) {
+      getCities(this.form.state_id).then(response => {
+        this.cities = response.data.data;
+        if (change) {
+          this.form.city_id = null;
+        }
+      });
     },
     getCep(cep) {
       getCEP(cep).then(response => {

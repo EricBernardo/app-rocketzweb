@@ -118,6 +118,10 @@ div:focus {
   background-color: transparent!important;
 }
 
+.el-select{
+  width: 100%!important;
+}
+
 @media only screen and (max-width: 600px) {
   .el-message {
     min-width: 80%;

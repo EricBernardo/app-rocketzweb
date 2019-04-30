@@ -1,8 +1,8 @@
 <template>
   <div class="app-container">
-    <el-form ref="form" :model="form">
-      <el-form-item label="Título">
-        <el-input v-model="form.title"/>
+    <el-form :model="form" :rules="rules" ref="form">
+      <el-form-item label="Título" prop="title">
+        <el-input v-model="form.title"></el-input>
       </el-form-item>
       <el-form-item>
         <router-link to="/company" class="pull-left">
@@ -13,8 +13,7 @@
           :loading="loading"
           type="primary"
           class="pull-right"
-          :disabled="!this.form.title"
-          @click.native.prevent="onSubmit"
+          @click="onSubmit('form')"
         >Salvar</el-button>
       </el-form-item>
     </el-form>
@@ -29,7 +28,14 @@ export default {
     return {
       loading: false,
       form: {
-        title: ""
+        title: null
+      },
+      rules: {
+        title: [
+          {
+            required: true
+          }
+        ]
       }
     };
   },
@@ -45,20 +51,27 @@ export default {
     });
   },
   methods: {
-    onSubmit(event) {
-      this.loading = true;
-      update(this.form, this.$route.params.id)
-        .then(response => {
-          this.$message({
-            message: "Atualização realizada com sucesso",
-            type: "success",
-            duration: 5 * 1000
-          });
-        })
-        .finally(responde => {
-          this.loading = false;
-        });
-      event.preventDefault();
+    onSubmit(formName) {
+      this.$refs[formName].validate(valid => {
+        if (valid) {
+          this.loading = true;
+
+          this.loading = true;
+          update(this.form, this.$route.params.id)
+            .then(response => {
+              this.$message({
+                message: "Atualização realizada com sucesso",
+                type: "success",
+                duration: 5 * 1000
+              });
+            })
+            .finally(responde => {
+              this.loading = false;
+            });
+        } else {
+          return false;
+        }
+      });
     }
   }
 };
