@@ -5,7 +5,7 @@
         <el-input v-model="form.title"></el-input>
       </el-form-item>
       <el-form-item label="CEP" prop="cep">
-        <el-input v-model="form.cep"></el-input>
+        <el-input v-model="form.cep" v-on:change="getCep()"></el-input>
       </el-form-item>
       <el-form-item label="Estado" prop="state_id">
         <el-select v-model="form.state_id" @change="getCities(true)">
@@ -72,6 +72,41 @@ export default {
           {
             required: true
           }
+        ],
+        address: [
+          {
+            required: true
+          }
+        ],
+        cep: [
+          {
+            required: true
+          }
+        ],
+        state_id: [
+          {
+            required: true
+          }
+        ],
+        city_id: [
+          {
+            required: true
+          }
+        ],
+        cnpj: [
+          {
+            required: true
+          }
+        ],
+        neighborhood: [
+          {
+            required: true
+          }
+        ],
+        number: [
+          {
+            required: true
+          }
         ]
       }
     };
@@ -114,23 +149,36 @@ export default {
         }
       });
     },
-    getCities(change = false) {
+    getCities(change = false, city = null) {
       getCities(this.form.state_id).then(response => {
         this.cities = response.data.data;
+        let form = this.form;
         if (change) {
-          this.form.city_id = null;
+          form.city_id = null;
+          if (city) {
+            Object.values(this.cities).forEach(function(item) {
+              if (item.name == city) {
+                form.city_id = item.id;
+              }
+            });
+          }
         }
       });
     },
-    getCep(cep) {
-      getCEP(cep).then(response => {
+    getCep() {
+      let __this = this;
+      getCEP(this.form.cep).then(response => {
         if (response.data.data) {
-          // model.neighborhood = response.data.data.bairro;
-
-          console.log("states", this.states);
-          // Object.values(states).forEach(function(value) {
-          //   console.log("value", value);
-          // });
+          let form = this.form;
+          let cities = this.cities;
+          form.neighborhood = response.data.data.bairro;
+          form.address = response.data.data.logradouro;
+          Object.values(this.states).forEach(function(state) {
+            if (state.abbr == response.data.data.uf) {
+              form.state_id = state.id;
+              __this.getCities(form.state_id, response.data.data.localidade);
+            }
+          });
         }
       });
     }
