@@ -1,30 +1,27 @@
 <template>
-  <div class="dashboard-container">
-    <div class="dashboard-text">{{ name }}</div>
+  <div class="app-container">
+    <ve-line :data="chartData"></ve-line>
   </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
-
+import VeLine from "v-charts/lib/line.common";
 export default {
-  name: 'Dashboard',
-  computed: {
-    ...mapGetters([
-      'name'
-    ])
+  components: { VeLine },
+  data() {
+    return {
+      chartData: {
+        columns: ["date", "Vendas"],
+        rows: [
+          { date: "01/01/2019", Vendas: 1231 },
+          { date: "01/02/2019", Vendas: 1223 },
+          { date: "01/03/2019", Vendas: 2123 },
+          { date: "01/04/2019", Vendas: 4123 },
+          { date: "01/05/2019", Vendas: 3123 },
+          { date: "01/06/2019", Vendas: 7123 }
+        ]
+      }
+    };
   }
-}
+};
 </script>
-
-<style lang="scss" scoped>
-.dashboard {
-  &-container {
-    margin: 30px;
-  }
-  &-text {
-    font-size: 30px;
-    line-height: 46px;
-  }
-}
-</style>
