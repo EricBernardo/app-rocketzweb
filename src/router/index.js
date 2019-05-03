@@ -247,6 +247,38 @@ export const constantRoutes = [{
     }
   }
   ]
+}, {
+  path: '/user',
+  component: Layout,
+  meta: {
+    title: 'Usuário',
+    icon: 'user'
+  },
+  children: [{
+    path: '',
+    name: 'user',
+    component: () => import('@/views/user/list'),
+    hidden: true
+  },
+  {
+    path: 'create',
+    name: 'user.create',
+    component: () => import('@/views/user/form'),
+    hidden: true,
+    meta: {
+      title: 'Cadastrar'
+    }
+  },
+  {
+    path: 'edit/:id',
+    name: 'user.edit',
+    component: () => import('@/views/user/form'),
+    hidden: true,
+    meta: {
+      title: 'Editar'
+    }
+  }
+  ]
 },
 
 // 404 page must be placed at the end !!!

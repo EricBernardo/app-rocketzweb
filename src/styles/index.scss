@@ -126,14 +126,18 @@ div:focus {
   text-align: left!important;
 }
 
+.navbar .right-menu .avatar-container .avatar-wrapper .el-icon-caret-bottom{
+  top: 15px!important;
+  font-size: 18px!important;
+}
+
 @media only screen and (max-width: 600px) {
   .el-message {
-    min-width: 80%;
+    min-width: 80%!important;
   }
   .el-message-box {
     width: 80%!important;
   }
-
   .el-table .el-button{
     width: 100%!important;
   }

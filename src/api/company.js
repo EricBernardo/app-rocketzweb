@@ -1,10 +1,16 @@
 import request from '@/utils/request';
 
-export function get(data) {
+export function get() {
   return request({
     url: '/company',
-    method: 'get',
-    data
+    method: 'get'
+  })
+}
+
+export function getAllCompany() {
+  return request({
+    url: '/company/all',
+    method: 'get'
   })
 }
 
