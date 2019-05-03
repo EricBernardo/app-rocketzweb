@@ -4,8 +4,11 @@
       <el-form-item label="Título" prop="title">
         <el-input v-model="form.title"></el-input>
       </el-form-item>
+      <el-form-item label="Preço" prop="price">
+        <money v-model="form.price" class="el-input__inner"></money>
+      </el-form-item>
       <el-form-item>
-        <router-link to="/company" class="pull-left">
+        <router-link :to="{ name: 'product' }" class="pull-left">
           <el-button size="mini">Voltar</el-button>
         </router-link>
         <el-button
@@ -21,17 +24,23 @@
 </template>
 
 <script>
-import { show, update } from "@/api/company";
+import { show, update } from "@/api/product";
 
 export default {
   data() {
     return {
       loading: false,
       form: {
-        title: null
+        title: null,
+        price: 0
       },
       rules: {
         title: [
+          {
+            required: true
+          }
+        ],
+        price: [
           {
             required: true
           }

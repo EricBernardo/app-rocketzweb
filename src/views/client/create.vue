@@ -46,10 +46,10 @@
 </template>
 
 <script>
-import { getStates } from "@/api/state";
-import { getCities } from "@/api/city";
 import { getCEP } from "@/api/cep";
+import { getCities } from "@/api/city";
 import { create } from "@/api/client";
+import { getStates } from "@/api/state";
 
 export default {
   data() {

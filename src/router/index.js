@@ -30,8 +30,7 @@ Vue.use(Router)
  * a base page that does not have permission requirements
  * all roles can be accessed
  */
-export const constantRoutes = [
-  {
+export const constantRoutes = [{
     path: '/login',
     component: () => import('@/views/login/index'),
     hidden: true
@@ -51,7 +50,10 @@ export const constantRoutes = [
       path: 'dashboard',
       name: 'Dashboard',
       component: () => import('@/views/dashboard/index'),
-      meta: { title: 'Dashboard', icon: 'dashboard' }
+      meta: {
+        title: 'Dashboard',
+        icon: 'dashboard'
+      }
     }]
   },
 
@@ -150,9 +152,11 @@ export const constantRoutes = [
   {
     path: '/company',
     component: Layout,
-    meta: { title: 'Empresa', icon: 'form' },
-    children: [
-      {
+    meta: {
+      title: 'Empresa',
+      icon: 'form'
+    },
+    children: [{
         path: '',
         name: 'company',
         component: () => import('@/views/company/index'),
@@ -163,24 +167,29 @@ export const constantRoutes = [
         name: 'company.create',
         component: () => import('@/views/company/create'),
         hidden: true,
-        meta: { title: 'Cadastrar' }
+        meta: {
+          title: 'Cadastrar'
+        }
       },
       {
         path: 'edit/:id',
         name: 'company.edit',
         component: () => import('@/views/company/edit'),
         hidden: true,
-        meta: { title: 'Editar' }
+        meta: {
+          title: 'Editar'
+        }
       }
     ]
   },
-
   {
     path: '/client',
     component: Layout,
-    meta: { title: 'Cliente', icon: 'form' },
-    children: [
-      {
+    meta: {
+      title: 'Cliente',
+      icon: 'form'
+    },
+    children: [{
         path: '',
         name: 'client',
         component: () => import('@/views/client/index'),
@@ -191,25 +200,68 @@ export const constantRoutes = [
         name: 'client.create',
         component: () => import('@/views/client/create'),
         hidden: true,
-        meta: { title: 'Cadastrar' }
+        meta: {
+          title: 'Cadastrar'
+        }
       },
       {
         path: 'edit/:id',
         name: 'client.edit',
         component: () => import('@/views/client/edit'),
         hidden: true,
-        meta: { title: 'Editar' }
+        meta: {
+          title: 'Editar'
+        }
+      }
+    ]
+  },
+  {
+    path: '/product',
+    component: Layout,
+    meta: {
+      title: 'Produto',
+      icon: 'form'
+    },
+    children: [{
+        path: '',
+        name: 'product',
+        component: () => import('@/views/product/index'),
+        hidden: true
+      },
+      {
+        path: 'create',
+        name: 'product.create',
+        component: () => import('@/views/product/create'),
+        hidden: true,
+        meta: {
+          title: 'Cadastrar'
+        }
+      },
+      {
+        path: 'edit/:id',
+        name: 'product.edit',
+        component: () => import('@/views/product/edit'),
+        hidden: true,
+        meta: {
+          title: 'Editar'
+        }
       }
     ]
   },
 
   // 404 page must be placed at the end !!!
-  { path: '*', redirect: '/404', hidden: true }
+  {
+    path: '*',
+    redirect: '/404',
+    hidden: true
+  }
 ]
 
 const createRouter = () => new Router({
   // mode: 'history', // require service support
-  scrollBehavior: () => ({ y: 0 }),
+  scrollBehavior: () => ({
+    y: 0
+  }),
   routes: constantRoutes
 })
 
