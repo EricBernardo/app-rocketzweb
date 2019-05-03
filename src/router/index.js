@@ -154,7 +154,7 @@ export const constantRoutes = [{
   component: Layout,
   meta: {
     title: 'Empresa',
-    icon: 'form'
+    icon: 'company'
   },
   children: [{
     path: '',
@@ -187,7 +187,7 @@ export const constantRoutes = [{
   component: Layout,
   meta: {
     title: 'Cliente',
-    icon: 'form'
+    icon: 'users'
   },
   children: [{
     path: '',
@@ -220,7 +220,7 @@ export const constantRoutes = [{
   component: Layout,
   meta: {
     title: 'Produto',
-    icon: 'form'
+    icon: 'product'
   },
   children: [{
     path: '',
