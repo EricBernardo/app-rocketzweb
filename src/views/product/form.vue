@@ -24,14 +24,15 @@
 </template>
 
 <script>
-import { create } from "@/api/product";
+import { show, save } from "@/api/product";
 
 export default {
   data() {
     return {
       loading: false,
       form: {
-        title: null
+        title: null,
+        price: 0
       },
       rules: {
         title: [
@@ -47,19 +48,32 @@ export default {
       }
     };
   },
+  created() {
+    if (this.$route.params.id) {
+      this.loading = true;
+      show(this.$route.params.id).then(response => {
+        Object.keys(this.form).forEach(key => {
+          this.form[key] = response.data.data[key];
+        });
+        this.loading = false;
+      });
+    }
+  },
   methods: {
     onSubmit(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
           this.loading = true;
-          create(this.form)
+          save(this.form, this.$route.params.id)
             .then(response => {
               this.$message({
-                message: "Cadastrado realizado com sucesso",
+                message: "Salvo com sucesso",
                 type: "success",
                 duration: 5 * 1000
               });
-              this.$refs[formName].resetFields();
+              if (!this.$route.params.id) {
+                this.$refs[formName].resetFields();
+              }
             })
             .finally(responde => {
               this.loading = false;

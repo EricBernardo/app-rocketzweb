@@ -31,6 +31,14 @@ export function update(data, id) {
   })
 }
 
+export function save(data, id) {
+  if (id) {
+    return update(data, id)
+  } else {
+    return create(data)
+  }
+}
+
 export function destroy(id) {
   return request({
     url: '/product/' + id,

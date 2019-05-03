@@ -192,13 +192,13 @@ export const constantRoutes = [{
   children: [{
     path: '',
     name: 'client',
-    component: () => import('@/views/client/index'),
+    component: () => import('@/views/client/list'),
     hidden: true
   },
   {
     path: 'create',
     name: 'client.create',
-    component: () => import('@/views/client/create'),
+    component: () => import('@/views/client/form'),
     hidden: true,
     meta: {
       title: 'Cadastrar'
@@ -207,7 +207,7 @@ export const constantRoutes = [{
   {
     path: 'edit/:id',
     name: 'client.edit',
-    component: () => import('@/views/client/edit'),
+    component: () => import('@/views/client/form'),
     hidden: true,
     meta: {
       title: 'Editar'
@@ -225,13 +225,13 @@ export const constantRoutes = [{
   children: [{
     path: '',
     name: 'product',
-    component: () => import('@/views/product/index'),
+    component: () => import('@/views/product/list'),
     hidden: true
   },
   {
     path: 'create',
     name: 'product.create',
-    component: () => import('@/views/product/create'),
+    component: () => import('@/views/product/form'),
     hidden: true,
     meta: {
       title: 'Cadastrar'
@@ -240,7 +240,7 @@ export const constantRoutes = [{
   {
     path: 'edit/:id',
     name: 'product.edit',
-    component: () => import('@/views/product/edit'),
+    component: () => import('@/views/product/form'),
     hidden: true,
     meta: {
       title: 'Editar'

@@ -118,8 +118,12 @@ div:focus {
   background-color: transparent!important;
 }
 
-.el-select{
+.el-select, .el-input-number{
   width: 100%!important;
+}
+
+.el-input-number .el-input__inner{
+  text-align: left!important;
 }
 
 @media only screen and (max-width: 600px) {
