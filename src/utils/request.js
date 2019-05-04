@@ -1,7 +1,13 @@
+import router from '@/router';
 import store from '@/store';
-import { getToken, removeToken } from '@/utils/auth';
+import {
+  getToken,
+  removeToken
+} from '@/utils/auth';
 import axios from 'axios';
-import { Message } from 'element-ui';
+import {
+  Message
+} from 'element-ui';
 
 // create an axios instance
 const service = axios.create({
@@ -35,7 +41,7 @@ service.interceptors.response.use(
   /**
    * If you want to get http information such as headers or status
    * Please return  response => response
-  */
+   */
 
   /**
    * Determine the request status by custom code
@@ -94,6 +100,14 @@ service.interceptors.response.use(
       duration: 5 * 1000,
       dangerouslyUseHTMLString: true
     })
+
+    if (error.response.status === 403) {
+
+      router.push({
+        name: 'dashboard'
+      });
+
+    }
 
     if (error.response.status === 401) {
 
