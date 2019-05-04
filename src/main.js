@@ -7,6 +7,7 @@ import 'element-ui/lib/theme-chalk/index.css';
 import 'normalize.css/normalize.css'; // A modern alternative to CSS resets
 import money from 'v-money';
 import Vue from 'vue';
+import VueMoment from 'vue-moment';
 import VueTheMask from 'vue-the-mask';
 import App from './App';
 import router from './router';
@@ -27,6 +28,8 @@ Vue.use(ElementUI, {
 Vue.component('pagination', require('laravel-vue-pagination'))
 
 Vue.use(VueTheMask)
+
+Vue.use(VueMoment)
 
 Vue.use(money, {
   decimal: ",",

@@ -43,7 +43,6 @@ export const constantRoutes = [{
     component: () => import('@/views/404'),
     hidden: true
   },
-
   {
     path: '/',
     component: Layout,
@@ -160,7 +159,8 @@ export const constantRoutes = [{
         }
       }
     ]
-  }, {
+  },
+  {
     path: '/user',
     component: Layout,
     roles: ['root', 'administrator'],
@@ -187,6 +187,40 @@ export const constantRoutes = [{
         path: 'edit/:id',
         name: 'user.edit',
         component: () => import('@/views/user/form'),
+        hidden: true,
+        meta: {
+          title: 'Editar'
+        }
+      }
+    ]
+  },
+  {
+    path: '/order',
+    component: Layout,
+    roles: ['root', 'administrator', 'client'],
+    meta: {
+      title: 'Pedido',
+      icon: 'order'
+    },
+    children: [{
+        path: '',
+        name: 'order',
+        component: () => import('@/views/order/index'),
+        hidden: true
+      },
+      {
+        path: 'create',
+        name: 'order.create',
+        component: () => import('@/views/order/form'),
+        hidden: true,
+        meta: {
+          title: 'Cadastrar'
+        }
+      },
+      {
+        path: 'edit/:id',
+        name: 'order.edit',
+        component: () => import('@/views/order/form'),
         hidden: true,
         meta: {
           title: 'Editar'
