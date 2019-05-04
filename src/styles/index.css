@@ -377,9 +377,33 @@ div:focus {
   margin-bottom: 10px !important;
 }
 
+.form-group.error input:not([type=checkbox]),
+.form-group.error select,
+.form-group.error textarea {
+  background-color: transparent !important;
+}
+
+.el-select,
+.el-input-number {
+  width: 100% !important;
+}
+
+.el-input-number .el-input__inner {
+  text-align: left !important;
+}
+
+.navbar .right-menu .avatar-container .avatar-wrapper .el-icon-caret-bottom {
+  top: 15px !important;
+  font-size: 18px !important;
+}
+
+button.el-button.pull-right.el-button--primary.el-button--mini {
+  margin-top: 8px !important;
+}
+
 @media only screen and (max-width: 600px) {
   .el-message {
-    min-width: 80%;
+    min-width: 80% !important;
   }
   .el-message-box {
     width: 80% !important;

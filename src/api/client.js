@@ -7,7 +7,7 @@ export function get() {
   })
 }
 
-export function getAllClient() {
+export function getAllClients() {
   return request({
     url: '/client/all',
     method: 'get'

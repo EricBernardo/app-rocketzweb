@@ -7,6 +7,13 @@ export function get() {
   })
 }
 
+export function getAllProducts() {
+  return request({
+    url: '/product/all',
+    method: 'get'
+  })
+}
+
 export function show(id) {
   return request({
     url: '/product/' + id,

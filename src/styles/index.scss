@@ -66,8 +66,8 @@ div:focus {
 
 
 .vue-form-generator fieldset {
-  border: 0!important;
-  padding: 0px!important;
+  border: 0 !important;
+  padding: 0px !important;
 }
 
 .pagination {
@@ -77,12 +77,12 @@ div:focus {
   border-radius: 4px;
 }
 
-.pagination > li {
+.pagination>li {
   display: inline;
 }
 
-.pagination > li > a,
-.pagination > li > span {
+.pagination>li>a,
+.pagination>li>span {
   position: relative;
   float: left;
   padding: 6px 12px;
@@ -98,47 +98,57 @@ div:focus {
   background-color: #304156;
   color: #fff;
 }
-.pagination .sr-only{
+
+.pagination .sr-only {
   display: none;
 }
 
-.pull-right{
+.pull-right {
   float: right;
 }
 
-.pull-left{
+.pull-left {
   float: left;
 }
 
-.m-b-10{
-  margin-bottom: 10px!important;
+.m-b-10 {
+  margin-bottom: 10px !important;
 }
 
-.form-group.error input:not([type=checkbox]), .form-group.error select, .form-group.error textarea{
-  background-color: transparent!important;
+.form-group.error input:not([type=checkbox]),
+.form-group.error select,
+.form-group.error textarea {
+  background-color: transparent !important;
 }
 
-.el-select, .el-input-number{
-  width: 100%!important;
+.el-select,
+.el-input-number {
+  width: 100% !important;
 }
 
-.el-input-number .el-input__inner{
-  text-align: left!important;
+.el-input-number .el-input__inner {
+  text-align: left !important;
 }
 
-.navbar .right-menu .avatar-container .avatar-wrapper .el-icon-caret-bottom{
-  top: 15px!important;
-  font-size: 18px!important;
+.navbar .right-menu .avatar-container .avatar-wrapper .el-icon-caret-bottom {
+  top: 15px !important;
+  font-size: 18px !important;
+}
+
+button.el-button.pull-right.el-button--primary.el-button--mini {
+  margin-top: 8px !important;
 }
 
 @media only screen and (max-width: 600px) {
   .el-message {
-    min-width: 80%!important;
+    min-width: 80% !important;
   }
+
   .el-message-box {
-    width: 80%!important;
+    width: 80% !important;
   }
-  .el-table .el-button{
-    width: 100%!important;
+
+  .el-table .el-button {
+    width: 100% !important;
   }
 }

@@ -51,7 +51,7 @@
 
 <script>
 import { getAllCompany } from "@/api/company";
-import { getAllClient } from "@/api/client";
+import { getAllClients } from "@/api/client";
 import { show, save } from "@/api/user";
 
 export default {
@@ -127,7 +127,7 @@ export default {
       this.companies = response.data.data;
     });
 
-    getAllClient().then(response => {
+    getAllClients().then(response => {
       this.clients = response.data.data;
     });
 
