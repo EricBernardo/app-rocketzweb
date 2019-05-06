@@ -1,7 +1,13 @@
 <template>
   <div class="app-container">
     <router-link :to="{ name: 'order.create' }">
-      <el-button type="success" class="pull-right m-b-10" size="mini">Adicionar produto</el-button>
+      <el-button
+        type="success"
+        class="pull-right m-b-10"
+        size="mini"
+        @click="addProduct()"
+        v-if="this.products.length"
+      >Adicionar produto</el-button>
     </router-link>
     <el-form :model="form" :rules="rules" ref="form">
       <el-col :span="12">
@@ -12,10 +18,10 @@
         </el-form-item>
       </el-col>
       <el-col :span="24">
-        <el-table :data="tableData" row-key="id" element-loading-text="Carregando..." border>
+        <el-table :data="form.products" row-key="id" element-loading-text="Carregando..." border>
           <el-table-column label="Produto">
             <template slot-scope="scope">
-              <el-select v-model="scope.row.product_id">
+              <el-select v-model="scope.row.product_id" @change="calculatePrice(scope.row)">
                 <el-option
                   v-for="item in products"
                   :key="item.id"
@@ -41,9 +47,19 @@
             </template>
           </el-table-column>
           <el-table-column label="-">
-            <el-button type="danger" size="mini">Remover</el-button>
+            <template slot-scope="scope">
+              <el-button type="danger" size="mini" @click="removeProduct(scope.row)">Remover</el-button>
+            </template>
           </el-table-column>
         </el-table>
+      </el-col>
+      <el-col :span="6">
+        <el-form-item label="Desconto" prop="discount">
+          <money v-model="form.discount" class="el-input__inner"></money>
+        </el-form-item>
+        <el-form-item label="Pago?" prop="paid">
+          <el-switch v-model="form.paid"></el-switch>
+        </el-form-item>
       </el-col>
       <el-col class="line" :span="24">
         <el-form-item>
@@ -66,31 +82,14 @@ export default {
     return {
       products: [],
       clients: [],
-      tableData: [
-        {
-          product_id: 1,
-          quantity: 3,
-          price: 450.5,
-          total: 450.5
-        },
-        {
-          product_id: 2,
-          quantity: 1,
-          price: 950,
-          total: 950
-        },
-        {
-          product_id: 1,
-          quantity: 2,
-          price: 500,
-          total: 500
-        }
-      ],
       form: {
-        title: null
+        client_id: null,
+        discount: 0,
+        products: [],
+        paid: false
       },
       rules: {
-        title: [
+        client_id: [
           {
             required: true
           }
@@ -108,7 +107,36 @@ export default {
   },
   methods: {
     calculatePrice(row) {
-      row.total = row.price * row.quantity;
+      let price = 0;
+      Object.values(this.products).forEach(function(value) {
+        if (value.id == row.product_id) {
+          price = value.price;
+        }
+      });
+      row.total = row.quantity * price;
+    },
+    addProduct() {
+      if (this.products.length) {
+        let product = this.products[0];
+        this.form.products.push({
+          product_id: product.id,
+          quantity: 1,
+          price: product.price,
+          total: product.price
+        });
+      } else {
+        this.$message({
+          message: "Produto não encontrado",
+          type: "error",
+          duration: 5 * 1000
+        });
+      }
+    },
+    removeProduct(row) {
+      var index = this.form.products.indexOf(row);
+      if (index > -1) {
+        this.form.products.splice(index, 1);
+      }
     }
   }
 };
