@@ -19,8 +19,14 @@
         </el-form-item>
       </el-col>
       <el-col :span="24">
-        <el-table :data="form.products" row-key="id" element-loading-text="Carregando..." border>
-          <el-table-column label="Produto">
+        <el-table
+          :data="form.products"
+          row-key="id"
+          element-loading-text="Carregando..."
+          border
+          width="100%"
+        >
+          <el-table-column label="Produto" min-width="150">
             <template slot-scope="scope">
               <el-select v-model="scope.row.product_id" @change="calculateProduct(scope.row)">
                 <el-option
@@ -32,7 +38,7 @@
               </el-select>
             </template>
           </el-table-column>
-          <el-table-column label="Quantidade">
+          <el-table-column label="Quantidade" min-width="150">
             <template slot-scope="scope">
               <el-input-number
                 v-model="scope.row.quantity"
@@ -42,12 +48,12 @@
               ></el-input-number>
             </template>
           </el-table-column>
-          <el-table-column label="Preço">
+          <el-table-column label="Preço" min-width="150">
             <template slot-scope="scope">
               <money v-model="scope.row.total" readonly disabled class="el-input__inner"></money>
             </template>
           </el-table-column>
-          <el-table-column label="-">
+          <el-table-column label="-" width="120" fixed="right">
             <template slot-scope="scope">
               <el-button type="danger" size="mini" @click="removeProduct(scope.row)">Remover</el-button>
             </template>
