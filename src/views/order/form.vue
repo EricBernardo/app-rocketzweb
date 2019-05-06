@@ -10,7 +10,8 @@
       >Adicionar produto</el-button>
     </router-link>
     <el-form :model="form" :rules="rules" ref="form">
-      <el-col :span="12">
+      <pre>{{form}}</pre>
+      <el-col :md="6" :sm="24">
         <el-form-item label="Cliente" prop="client_id">
           <el-select v-model="form.client_id">
             <el-option v-for="item in clients" :key="item.id" :label="item.title" :value="item.id"></el-option>
@@ -21,7 +22,7 @@
         <el-table :data="form.products" row-key="id" element-loading-text="Carregando..." border>
           <el-table-column label="Produto">
             <template slot-scope="scope">
-              <el-select v-model="scope.row.product_id" @change="calculatePrice(scope.row)">
+              <el-select v-model="scope.row.product_id" @change="calculateProduct(scope.row)">
                 <el-option
                   v-for="item in products"
                   :key="item.id"
@@ -35,7 +36,7 @@
             <template slot-scope="scope">
               <el-input-number
                 v-model="scope.row.quantity"
-                @change="calculatePrice(scope.row)"
+                @change="calculateProduct(scope.row)"
                 :min="1"
                 :max="100"
               ></el-input-number>
@@ -53,12 +54,23 @@
           </el-table-column>
         </el-table>
       </el-col>
-      <el-col :span="6">
+      <el-col :md="6" :sm="24">
         <el-form-item label="Desconto" prop="discount">
           <money v-model="form.discount" class="el-input__inner"></money>
         </el-form-item>
         <el-form-item label="Pago?" prop="paid">
           <el-switch v-model="form.paid"></el-switch>
+        </el-form-item>
+      </el-col>
+      <el-col :md="6" :sm="24" class="pull-right">
+        <el-form-item label="Subtotal" prop="subtotal">
+          <money v-model="form.subtotal" class="el-input__inner"></money>
+        </el-form-item>
+        <el-form-item label="Desconto">
+          <money v-model="form.discount" class="el-input__inner" disabled readony></money>
+        </el-form-item>
+        <el-form-item label="Total" prop="total">
+          <money v-model="form.total" class="el-input__inner"></money>
         </el-form-item>
       </el-col>
       <el-col class="line" :span="24">
@@ -86,7 +98,9 @@ export default {
         client_id: null,
         discount: 0,
         products: [],
-        paid: false
+        paid: false,
+        subtotal: 0,
+        total: 0
       },
       rules: {
         client_id: [
@@ -106,14 +120,31 @@ export default {
     });
   },
   methods: {
-    calculatePrice(row) {
+    calculateProduct(row) {
       let price = 0;
+
       Object.values(this.products).forEach(function(value) {
         if (value.id == row.product_id) {
           price = value.price;
         }
       });
+
       row.total = row.quantity * price;
+
+      this.calculateOrder();
+    },
+    calculateOrder() {
+      let form = this.form;
+
+      form.subtotal = 0;
+      form.total = 0;
+
+      Object.values(form.products).forEach(function(value) {
+        form.subtotal = value.total;
+        form.total = value.total;
+      });
+
+      form.total = form.total - form.discount;
     },
     addProduct() {
       if (this.products.length) {
@@ -124,6 +155,8 @@ export default {
           price: product.price,
           total: product.price
         });
+
+        this.calculateOrder();
       } else {
         this.$message({
           message: "Produto não encontrado",
@@ -136,6 +169,7 @@ export default {
       var index = this.form.products.indexOf(row);
       if (index > -1) {
         this.form.products.splice(index, 1);
+        this.calculateOrder();
       }
     }
   }
