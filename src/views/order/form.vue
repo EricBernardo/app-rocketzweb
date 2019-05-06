@@ -27,12 +27,17 @@
           </el-table-column>
           <el-table-column label="Quantidade">
             <template slot-scope="scope">
-              <el-input-number v-model="scope.row.quantity" :min="1" :max="100"></el-input-number>
+              <el-input-number
+                v-model="scope.row.quantity"
+                @change="calculatePrice(scope.row)"
+                :min="1"
+                :max="100"
+              ></el-input-number>
             </template>
           </el-table-column>
           <el-table-column label="Preço">
             <template slot-scope="scope">
-              <money v-model="scope.row.price" readonly disabled class="el-input__inner"></money>
+              <money v-model="scope.row.total" readonly disabled class="el-input__inner"></money>
             </template>
           </el-table-column>
           <el-table-column label="-">
@@ -65,17 +70,20 @@ export default {
         {
           product_id: 1,
           quantity: 3,
-          price: 450.5
+          price: 450.5,
+          total: 450.5
         },
         {
           product_id: 2,
           quantity: 1,
-          price: 950
+          price: 950,
+          total: 950
         },
         {
           product_id: 1,
-          quantity: 1,
-          price: 500
+          quantity: 2,
+          price: 500,
+          total: 500
         }
       ],
       form: {
@@ -98,6 +106,10 @@ export default {
       this.clients = response.data.data;
     });
   },
-  methods: {}
+  methods: {
+    calculatePrice(row) {
+      row.total = row.price * row.quantity;
+    }
+  }
 };
 </script>
