@@ -1,16 +1,14 @@
 <template>
   <div class="app-container">
-    <router-link :to="{ name: 'order.create' }">
-      <el-button
-        type="success"
-        class="pull-right m-b-10"
-        size="mini"
-        @click="addProduct()"
-        v-if="this.products.length"
-      >Adicionar produto</el-button>
-    </router-link>
+    <el-button
+      type="success"
+      class="pull-right m-b-10"
+      size="mini"
+      @click="addProduct()"
+      v-if="this.products.length"
+    >Adicionar produto</el-button>
     <el-form :model="form" :rules="rules" ref="form">
-      <pre>{{form}}</pre>
+      <pre>{{this.form.products}}</pre>
       <el-col :md="6" :sm="24">
         <el-form-item label="Cliente" prop="client_id">
           <el-select v-model="form.client_id">
@@ -62,7 +60,12 @@
       </el-col>
       <el-col :md="6" :sm="24">
         <el-form-item label="Desconto" prop="discount">
-          <money v-model="form.discount" class="el-input__inner"></money>
+          <el-col :md="20" :sm="24">
+            <money v-model="form.discount" class="el-input__inner"></money>
+          </el-col>
+          <el-col :md="4" :sm="24">
+            <el-button type="warning" @click="calculateOrder">Aplicar</el-button>
+          </el-col>
         </el-form-item>
         <el-form-item label="Pago?" prop="paid">
           <el-switch v-model="form.paid"></el-switch>
@@ -72,19 +75,22 @@
         <el-form-item label="Subtotal" prop="subtotal">
           <money v-model="form.subtotal" class="el-input__inner"></money>
         </el-form-item>
-        <el-form-item label="Desconto">
-          <money v-model="form.discount" class="el-input__inner" disabled readony></money>
-        </el-form-item>
         <el-form-item label="Total" prop="total">
           <money v-model="form.total" class="el-input__inner"></money>
         </el-form-item>
       </el-col>
       <el-col class="line" :span="24">
         <el-form-item>
-          <router-link :to="{ name: 'company' }" class="pull-left">
+          <router-link :to="{ name: 'order' }" class="pull-left">
             <el-button size="mini">Voltar</el-button>
           </router-link>
-          <el-button size="mini" type="primary" class="pull-right" @click="onSubmit('form')">Salvar</el-button>
+          <el-button
+            size="mini"
+            type="primary"
+            :loading="loading"
+            class="pull-right"
+            @click="onSubmit('form')"
+          >Salvar</el-button>
         </el-form-item>
       </el-col>
     </el-form>
@@ -92,12 +98,14 @@
 </template>
 
 <script>
+import { show, save } from "@/api/order";
 import { getAllProducts } from "@/api/product";
 import { getAllClients } from "@/api/client";
 
 export default {
   data() {
     return {
+      loading: false,
       products: [],
       clients: [],
       form: {
@@ -113,24 +121,51 @@ export default {
           {
             required: true
           }
+        ],
+        products: [
+          {
+            required: true
+          }
         ]
       }
     };
   },
   created() {
+    let form = this.form;
+
     getAllProducts().then(response => {
       this.products = response.data.data;
     });
     getAllClients().then(response => {
       this.clients = response.data.data;
     });
+
+    if (this.$route.params.id) {
+      this.loading = true;
+      show(this.$route.params.id).then(response => {
+        Object.values(response.data.products).forEach(product => {
+          form.products.push({
+            product_id: product.id,
+            quantity: product.pivot.quantity,
+            price: product.pivot.price,
+            total: product.pivot.price * product.pivot.quantity
+          });
+        });
+        form.client_id = response.data.client_id;
+        form.discount = response.data.discount;
+        form.paid = response.data.paid ? true : false;
+        form.subtotal = response.data.subtotal;
+        form.total = response.data.total;
+        this.loading = false;
+      });
+    }
   },
   methods: {
     calculateProduct(row) {
       let price = 0;
 
-      Object.values(this.products).forEach(function(value) {
-        if (value.id == row.product_id) {
+      Object.values(this.form.products).forEach(function(value) {
+        if (value.product_id == row.product_id) {
           price = value.price;
         }
       });
@@ -146,9 +181,11 @@ export default {
       form.total = 0;
 
       Object.values(form.products).forEach(function(value) {
-        form.subtotal = value.total;
-        form.total = value.total;
+        form.subtotal += value.total;
+        form.total += value.total;
       });
+
+      form.discount = Math.abs(form.discount);
 
       form.total = form.total - form.discount;
     },
@@ -177,6 +214,28 @@ export default {
         this.form.products.splice(index, 1);
         this.calculateOrder();
       }
+    },
+    onSubmit(formName) {
+      this.$refs[formName].validate(valid => {
+        if (valid) {
+          this.loading = true;
+          save(this.form, this.$route.params.id)
+            .then(response => {
+              this.$message({
+                message: "Salvo com sucesso",
+                type: "success",
+                duration: 5 * 1000
+              });
+              if (!this.$route.params.id) {
+                this.$refs[formName].resetFields();
+                this.form.products = [];
+              }
+            })
+            .finally(responde => {
+              this.loading = false;
+            });
+        }
+      });
     }
   }
 };
