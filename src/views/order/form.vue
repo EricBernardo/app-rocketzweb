@@ -7,11 +7,11 @@
       @click="addProduct()"
       v-if="this.products.length"
     >Adicionar produto</el-button>
+    <pre>{{form}}</pre>
     <el-form :model="form" :rules="rules" ref="form">
-      <pre>{{this.form.products}}</pre>
       <el-col :md="6" :sm="24">
         <el-form-item label="Cliente" prop="client_id">
-          <el-select v-model="form.client_id">
+          <el-select v-model="form.client_id" filterable>
             <el-option v-for="item in clients" :key="item.id" :label="item.title" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
@@ -26,7 +26,13 @@
         >
           <el-table-column label="Produto" min-width="150">
             <template slot-scope="scope">
-              <el-select v-model="scope.row.product_id" @change="calculateProduct(scope.row)">
+              <el-select
+                v-model="scope.row.product_id"
+                @change="calculateProduct(scope.row)"
+                filterable
+                :disabled="scope.row.block"
+                :readonly="scope.row.block"
+              >
                 <el-option
                   v-for="item in products"
                   :key="item.id"
@@ -40,15 +46,22 @@
             <template slot-scope="scope">
               <el-input-number
                 v-model="scope.row.quantity"
-                @change="calculateProduct(scope.row)"
+                :change="calculateProduct(scope.row)"
                 :min="1"
                 :max="100"
+                :disabled="scope.row.block"
+                :readonly="scope.row.block"
               ></el-input-number>
             </template>
           </el-table-column>
           <el-table-column label="Preço" min-width="150">
             <template slot-scope="scope">
-              <money v-model="scope.row.total" readonly disabled class="el-input__inner"></money>
+              <money
+                v-model="scope.row.total"
+                :readonly="true"
+                :disabled="true"
+                class="el-input__inner"
+              ></money>
             </template>
           </el-table-column>
           <el-table-column label="-" width="120" fixed="right">
@@ -62,9 +75,6 @@
         <el-form-item label="Desconto" prop="discount">
           <el-col :md="20" :sm="24">
             <money v-model="form.discount" class="el-input__inner"></money>
-          </el-col>
-          <el-col :md="4" :sm="24">
-            <el-button type="warning" @click="calculateOrder">Aplicar</el-button>
           </el-col>
         </el-form-item>
         <el-form-item label="Pago?" prop="paid">
@@ -140,54 +150,58 @@ export default {
       this.clients = response.data.data;
     });
 
-    if (this.$route.params.id) {
-      this.loading = true;
-      show(this.$route.params.id).then(response => {
-        Object.values(response.data.products).forEach(product => {
-          form.products.push({
-            product_id: product.id,
-            quantity: product.pivot.quantity,
-            price: product.pivot.price,
-            total: product.pivot.price * product.pivot.quantity
-          });
-        });
-        form.client_id = response.data.client_id;
-        form.discount = response.data.discount;
-        form.paid = response.data.paid ? true : false;
-        form.subtotal = response.data.subtotal;
-        form.total = response.data.total;
-        this.loading = false;
-      });
-    }
+    this.getOrder();
   },
   methods: {
+    getOrder() {
+      let form = this.form;
+      if (this.$route.params.id) {
+        this.loading = true;
+        show(this.$route.params.id).then(response => {
+          form.products = [];
+          Object.values(response.data.products).forEach(product => {
+            form.products.push({
+              id: product.pivot.id,
+              product_id: product.id,
+              quantity: product.pivot.quantity,
+              price: product.pivot.price,
+              total: product.pivot.price * product.pivot.quantity,
+              block: true
+            });
+          });
+          form.client_id = response.data.client_id;
+          form.discount = response.data.discount;
+          form.paid = response.data.paid ? true : false;
+          form.subtotal = response.data.subtotal;
+          form.total = response.data.total;
+          this.loading = false;
+        });
+      }
+    },
     calculateProduct(row) {
-      let price = 0;
-
-      Object.values(this.form.products).forEach(function(value) {
-        if (value.product_id == row.product_id) {
-          price = value.price;
-        }
-      });
-
-      row.total = row.quantity * price;
-
-      this.calculateOrder();
+      if (!row.block) {
+        let price = 0;
+        Object.values(this.products).forEach(function(value) {
+          if (value.id == row.product_id) {
+            price = value.price;
+          }
+        });
+        row.price = price;
+        row.total = row.quantity * row.price;
+        this.calculateOrder();
+      }
     },
     calculateOrder() {
+      let total = 0;
       let form = this.form;
-
       form.subtotal = 0;
       form.total = 0;
-
       Object.values(form.products).forEach(function(value) {
-        form.subtotal += value.total;
-        form.total += value.total;
+        total += value.total;
       });
-
       form.discount = Math.abs(form.discount);
-
-      form.total = form.total - form.discount;
+      form.subtotal = total;
+      form.total = total - form.discount;
     },
     addProduct() {
       if (this.products.length) {
@@ -196,10 +210,9 @@ export default {
           product_id: product.id,
           quantity: 1,
           price: product.price,
-          total: product.price
+          total: product.price,
+          block: false
         });
-
-        this.calculateOrder();
       } else {
         this.$message({
           message: "Produto não encontrado",
@@ -211,8 +224,9 @@ export default {
     removeProduct(row) {
       var index = this.form.products.indexOf(row);
       if (index > -1) {
+        this.form.total -= this.form.products.price;
+        this.form.subtotal -= this.form.products.price;
         this.form.products.splice(index, 1);
-        this.calculateOrder();
       }
     },
     onSubmit(formName) {
@@ -230,6 +244,7 @@ export default {
                 this.$refs[formName].resetFields();
                 this.form.products = [];
               }
+              this.getOrder();
             })
             .finally(responde => {
               this.loading = false;
