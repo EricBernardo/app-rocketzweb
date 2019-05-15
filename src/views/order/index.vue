@@ -11,7 +11,7 @@
         <template slot-scope="scope">R$ {{ scope.row.total }}</template>
       </el-table-column>
       <el-table-column label="Data">
-        <template slot-scope="scope">{{ scope.row.created_at | moment("DD/MM/YYYY h:mm") }} h</template>
+        <template slot-scope="scope">{{ scope.row.created_at | moment("DD/MM/YYYY H:mm") }} h</template>
       </el-table-column>
       <el-table-column label="Pago?">
         <template slot-scope="scope">{{ scope.row.paid ? 'Sim' : 'Não' }}</template>

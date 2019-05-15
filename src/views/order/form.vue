@@ -7,7 +7,6 @@
       @click="addProduct()"
       v-if="this.products.length"
     >Adicionar produto</el-button>
-    <pre>{{form}}</pre>
     <el-form :model="form" :rules="rules" ref="form">
       <el-col :md="6" :sm="24">
         <el-form-item label="Cliente" prop="client_id">
@@ -31,7 +30,6 @@
                 @change="calculateProduct(scope.row)"
                 filterable
                 :disabled="scope.row.block"
-                :readonly="scope.row.block"
               >
                 <el-option
                   v-for="item in products"
@@ -50,18 +48,12 @@
                 :min="1"
                 :max="100"
                 :disabled="scope.row.block"
-                :readonly="scope.row.block"
               ></el-input-number>
             </template>
           </el-table-column>
           <el-table-column label="Preço" min-width="150">
             <template slot-scope="scope">
-              <money
-                v-model="scope.row.total"
-                :readonly="true"
-                :disabled="true"
-                class="el-input__inner"
-              ></money>
+              <money v-model="scope.row.total" :readonly="true" class="el-input__inner"></money>
             </template>
           </el-table-column>
           <el-table-column label="-" width="120" fixed="right">
@@ -188,8 +180,8 @@ export default {
         });
         row.price = price;
         row.total = row.quantity * row.price;
-        this.calculateOrder();
       }
+      this.calculateOrder();
     },
     calculateOrder() {
       let total = 0;
