@@ -1,9 +1,10 @@
 import request from '@/utils/request';
 
-export function get() {
+export function get(params) {
   return request({
     url: '/order',
-    method: 'get'
+    method: 'get',
+    params
   })
 }
 

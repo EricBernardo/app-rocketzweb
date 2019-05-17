@@ -15,11 +15,11 @@ export function getInfo(token) {
   })
 }
 
-export function get(data) {
+export function get(params) {
   return request({
     url: '/user',
     method: 'get',
-    data
+    params
   })
 }
 
