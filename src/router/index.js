@@ -127,6 +127,40 @@ export const constantRoutes = [{
     ]
   },
   {
+    path: '/product_category',
+    component: Layout,
+    roles: ['root', 'administrator', 'client'],
+    meta: {
+      title: 'Categoria',
+      icon: 'category'
+    },
+    children: [{
+        path: '',
+        name: 'product_category',
+        component: () => import('@/views/product_category/list'),
+        hidden: true
+      },
+      {
+        path: 'create',
+        name: 'product_category.create',
+        component: () => import('@/views/product_category/form'),
+        hidden: true,
+        meta: {
+          title: 'Cadastrar'
+        }
+      },
+      {
+        path: 'edit/:id',
+        name: 'product_category.edit',
+        component: () => import('@/views/product_category/form'),
+        hidden: true,
+        meta: {
+          title: 'Editar'
+        }
+      }
+    ]
+  },
+  {
     path: '/product',
     component: Layout,
     roles: ['root', 'administrator', 'client'],

@@ -95,7 +95,7 @@ service.interceptors.response.use(
     }
 
     Message({
-      message: '<b>' + error.response.data.message + '</b>' + text,
+      message: '<b>Atenção</b>' + text,
       type: 'error',
       duration: 5 * 1000,
       dangerouslyUseHTMLString: true

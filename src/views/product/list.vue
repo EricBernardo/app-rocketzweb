@@ -4,6 +4,9 @@
       <el-button type="success" class="pull-right m-b-10" size="mini">Cadastrar</el-button>
     </router-link>
     <el-table v-loading="listLoading" :data="list.data" element-loading-text="Carregando..." border>
+      <el-table-column label="Categoria">
+        <template slot-scope="scope">{{ scope.row.category.title }}</template>
+      </el-table-column>
       <el-table-column label="Título">
         <template slot-scope="scope">{{ scope.row.title }}</template>
       </el-table-column>

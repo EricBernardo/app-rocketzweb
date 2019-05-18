@@ -6,9 +6,7 @@
 
     <el-table v-loading="listLoading" :data="list.data" element-loading-text="Carregando..." border>
       <el-table-column label="Título">
-        <template slot-scope="scope">
-          {{ scope.row.title }}
-        </template>
+        <template slot-scope="scope">{{ scope.row.title }}</template>
       </el-table-column>
       <el-table-column label="-">
         <template slot-scope="scope">
@@ -27,56 +25,52 @@
 </template>
 
 <script>
-  import { get, destroy } from '@/api/company';
+import { get, destroy } from "@/api/company";
 
-  export default {
-    filters: {
-      statusFilter(status) {
-        const statusMap = {
-          published: 'success',
-          draft: 'gray',
-          deleted: 'danger'
-        }
-        return statusMap[status]
-      }
+export default {
+  filters: {
+    statusFilter(status) {
+      const statusMap = {
+        published: "success",
+        draft: "gray",
+        deleted: "danger"
+      };
+      return statusMap[status];
+    }
+  },
+  data() {
+    return {
+      list: {},
+      listLoading: false
+    };
+  },
+  created() {
+    this.fetchData();
+  },
+  methods: {
+    fetchData(page = 1) {
+      this.listLoading = true;
+
+      var params = { page: page };
+
+      get(params).then(response => {
+        this.list = response.data;
+        this.listLoading = false;
+      });
     },
-    data() {
-      return {
-        list: {},
-        listLoading: false
-      }
-    },
-    created() {
-      this.fetchData()
-    },
-    methods: {
-      fetchData(page = 1) {
-
-        this.listLoading = true
-
-        var params = { page: page }
-
-        get(params).then(response => {
-          this.list = response.data
-          this.listLoading = false
-        })
-
-      },
-      destroyData(id) {
-
-        this.$confirm('Desejas realmente excluir esse registro?', 'Atenção', {
-          confirmButtonText: 'Confirmar',
-          cancelButtonText: 'Cancelar',
-          type: 'warning'
-        }).then(() => {
+    destroyData(id) {
+      this.$confirm("Desejas realmente excluir esse registro?", "Atenção", {
+        confirmButtonText: "Confirmar",
+        cancelButtonText: "Cancelar",
+        type: "warning"
+      })
+        .then(() => {
           destroy(id).then(response => {
-            this.fetchData()
-          })
-        }).catch(() => {
-
+            this.fetchData();
+          });
         })
-
-      }
+        .catch(() => {});
     }
   }
+};
 </script>

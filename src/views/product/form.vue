@@ -1,6 +1,11 @@
 <template>
   <div class="app-container">
     <el-form :model="form" :rules="rules" ref="form">
+      <el-form-item label="Categoria" prop="product_category_id">
+        <el-select v-model="form.product_category_id" filterable>
+          <el-option v-for="item in categories" :key="item.id" :label="item.title" :value="item.id"></el-option>
+        </el-select>
+      </el-form-item>
       <el-form-item label="Título" prop="title">
         <el-input v-model="form.title"></el-input>
       </el-form-item>
@@ -25,16 +30,24 @@
 
 <script>
 import { show, save } from "@/api/product";
+import { getAllProductCategories } from "@/api/product_category";
 
 export default {
   data() {
     return {
       loading: false,
+      categories: [],
       form: {
+        product_category_id: null,
         title: null,
         price: 0
       },
       rules: {
+        product_category_id: [
+          {
+            required: true
+          }
+        ],
         title: [
           {
             required: true
@@ -49,6 +62,9 @@ export default {
     };
   },
   created() {
+    getAllProductCategories().then(response => {
+      this.categories = response.data.data;
+    });
     if (this.$route.params.id) {
       this.loading = true;
       show(this.$route.params.id).then(response => {
