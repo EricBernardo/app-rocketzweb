@@ -1,6 +1,11 @@
 <template>
   <div class="app-container">
     <el-form :model="form" :rules="rules" ref="form" label-width="120px">
+      <el-form-item label="Empresa" prop="company_id" v-if="role=='root'">
+        <el-select v-model="form.company_id">
+          <el-option v-for="item in companies" :key="item.id" :label="item.title" :value="item.id"></el-option>
+        </el-select>
+      </el-form-item>
       <el-form-item label="Título" prop="title">
         <el-input v-model="form.title"></el-input>
       </el-form-item>
@@ -46,10 +51,12 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 import { getStates } from "@/api/state";
 import { getCities } from "@/api/city";
 import { getCEP } from "@/api/cep";
 import { show, save } from "@/api/client";
+import { getAllCompany } from "@/api/company";
 
 export default {
   data() {
@@ -57,7 +64,9 @@ export default {
       loading: false,
       states: [],
       cities: [],
+      companies: [],
       form: {
+        company_id: null,
         title: null,
         address: null,
         cep: null,
@@ -68,6 +77,11 @@ export default {
         number: null
       },
       rules: {
+        company_id: [
+          {
+            required: this.role ? true : false
+          }
+        ],
         title: [
           {
             required: true
@@ -111,10 +125,19 @@ export default {
       }
     };
   },
+  computed: {
+    ...mapGetters(["role"])
+  },
   created() {
     getStates().then(response => {
       this.states = response.data.data;
     });
+
+    if (this.role == "root") {
+      getAllCompany().then(response => {
+        this.companies = response.data.data;
+      });
+    }
 
     if (this.$route.params.id) {
       this.loading = true;
