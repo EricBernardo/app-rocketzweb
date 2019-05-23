@@ -1,6 +1,11 @@
 <template>
   <div class="app-container">
     <el-form :model="form" :rules="rules" ref="form">
+      <el-form-item label="Empresa" prop="company_id" v-if="role=='root'">
+        <el-select v-model="form.company_id">
+          <el-option v-for="item in companies" :key="item.id" :label="item.title" :value="item.id"></el-option>
+        </el-select>
+      </el-form-item>
       <el-form-item label="Título" prop="title">
         <el-input v-model="form.title"></el-input>
       </el-form-item>
@@ -21,16 +26,25 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 import { show, save } from "@/api/product_category";
+import { getAllCompany } from "@/api/company";
 
 export default {
   data() {
     return {
       loading: false,
+      companies: [],
       form: {
+        company_id: null,
         title: null
       },
       rules: {
+        company_id: [
+          {
+            required: this.role ? true : false
+          }
+        ],
         title: [
           {
             required: true
@@ -39,7 +53,16 @@ export default {
       }
     };
   },
+  computed: {
+    ...mapGetters(["role"])
+  },
   created() {
+    if (this.role == "root") {
+      getAllCompany().then(response => {
+        this.companies = response.data.data;
+      });
+    }
+
     if (this.$route.params.id) {
       this.loading = true;
       show(this.$route.params.id).then(response => {

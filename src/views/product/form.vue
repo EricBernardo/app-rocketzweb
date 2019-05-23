@@ -3,7 +3,12 @@
     <el-form :model="form" :rules="rules" ref="form">
       <el-form-item label="Categoria" prop="product_category_id">
         <el-select v-model="form.product_category_id" filterable>
-          <el-option v-for="item in categories" :key="item.id" :label="item.title" :value="item.id"></el-option>
+          <el-option
+            v-for="item in categories"
+            :key="item.id"
+            :label="(role == 'root' ? item.company.title + ' - ' : '') + item.title"
+            :value="item.id"
+          ></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="Título" prop="title">
@@ -29,6 +34,7 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 import { show, save } from "@/api/product";
 import { getAllProductCategories } from "@/api/product_category";
 
@@ -36,6 +42,7 @@ export default {
   data() {
     return {
       loading: false,
+      companies: [],
       categories: [],
       form: {
         product_category_id: null,
@@ -43,6 +50,11 @@ export default {
         price: 0
       },
       rules: {
+        company_id: [
+          {
+            required: this.role ? true : false
+          }
+        ],
         product_category_id: [
           {
             required: true
@@ -61,10 +73,14 @@ export default {
       }
     };
   },
+  computed: {
+    ...mapGetters(["role"])
+  },
   created() {
     getAllProductCategories().then(response => {
       this.categories = response.data.data;
     });
+
     if (this.$route.params.id) {
       this.loading = true;
       show(this.$route.params.id).then(response => {

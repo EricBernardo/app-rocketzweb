@@ -11,7 +11,12 @@
       <el-col :md="6" :sm="24">
         <el-form-item label="Cliente" prop="client_id">
           <el-select v-model="form.client_id" filterable>
-            <el-option v-for="item in clients" :key="item.id" :label="item.title" :value="item.id"></el-option>
+            <el-option
+              v-for="item in clients"
+              :key="item.id"
+              :label="(role == 'root' ? item.company.title + ' / ' : '') + item.title"
+              :value="item.id"
+            ></el-option>
           </el-select>
         </el-form-item>
       </el-col>
@@ -34,7 +39,7 @@
                 <el-option
                   v-for="item in products"
                   :key="item.id"
-                  :label="item.title"
+                  :label="(role == 'root' ? item.category.company.title + ' / ' : '') + item.category.title + ' / ' + item.title"
                   :value="item.id"
                 ></el-option>
               </el-select>
@@ -100,6 +105,7 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 import { show, save } from "@/api/order";
 import { getAllProducts } from "@/api/product";
 import { getAllClients } from "@/api/client";
@@ -131,6 +137,9 @@ export default {
         ]
       }
     };
+  },
+  computed: {
+    ...mapGetters(["role"])
   },
   created() {
     let form = this.form;
