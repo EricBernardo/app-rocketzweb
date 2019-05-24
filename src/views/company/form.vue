@@ -1,8 +1,8 @@
 <template>
   <div class="app-container">
-    <el-form :model="form" :rules="rules" ref="form">
+    <el-form :model="form" :rules="rules" ref="form" @submit.native.prevent>
       <el-form-item label="Título" prop="title">
-        <el-input v-model="form.title"></el-input>
+        <el-input v-model="form.title" :disabled="loading"></el-input>
       </el-form-item>
       <el-form-item>
         <router-link :to="{ name: 'company' }" class="pull-left">
@@ -33,7 +33,8 @@ export default {
       rules: {
         title: [
           {
-            required: true
+            required: true,
+            message: "Campo obrigatório"
           }
         ]
       }

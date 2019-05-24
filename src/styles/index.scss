@@ -104,11 +104,11 @@ div:focus {
 }
 
 .pull-right {
-  float: right!important;
+  float: right !important;
 }
 
 .pull-left {
-  float: left!important;
+  float: left !important;
 }
 
 .m-b-10 {
@@ -151,4 +151,10 @@ button.el-button.pull-right.el-button--primary.el-button--mini {
   .el-table .el-button {
     width: 100% !important;
   }
+
+  .el-select-dropdown.el-popper {
+    width: 90%;
+    left: 5% !important;
+  }
+
 }

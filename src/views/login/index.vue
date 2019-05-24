@@ -7,6 +7,7 @@
       class="login-form"
       auto-complete="on"
       label-position="left"
+      @submit.native.prevent
     >
       <div class="title-container">
         <h3 class="title">Rocketz Web</h3>

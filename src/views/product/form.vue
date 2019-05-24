@@ -1,8 +1,8 @@
 <template>
   <div class="app-container">
-    <el-form :model="form" :rules="rules" ref="form">
+    <el-form :model="form" :rules="rules" ref="form" @submit.native.prevent>
       <el-form-item label="Categoria" prop="product_category_id">
-        <el-select v-model="form.product_category_id" filterable>
+        <el-select v-model="form.product_category_id" :disabled="loading" filterable>
           <el-option
             v-for="item in categories"
             :key="item.id"
@@ -12,10 +12,10 @@
         </el-select>
       </el-form-item>
       <el-form-item label="Título" prop="title">
-        <el-input v-model="form.title"></el-input>
+        <el-input v-model="form.title" :disabled="loading"></el-input>
       </el-form-item>
       <el-form-item label="Preço" prop="price">
-        <money v-model="form.price" class="el-input__inner"></money>
+        <money v-model="form.price" :disabled="loading" class="el-input__inner"></money>
       </el-form-item>
       <el-form-item>
         <router-link :to="{ name: 'product' }" class="pull-left">
@@ -52,22 +52,26 @@ export default {
       rules: {
         company_id: [
           {
-            required: this.role ? true : false
+            required: true,
+            message: "Campo obrigatório"
           }
         ],
         product_category_id: [
           {
-            required: true
+            required: true,
+            message: "Campo obrigatório"
           }
         ],
         title: [
           {
-            required: true
+            required: true,
+            message: "Campo obrigatório"
           }
         ],
         price: [
           {
-            required: true
+            required: true,
+            message: "Campo obrigatório"
           }
         ]
       }

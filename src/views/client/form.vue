@@ -1,38 +1,49 @@
 <template>
   <div class="app-container">
-    <el-form :model="form" :rules="rules" ref="form" label-width="120px">
+    <el-form :model="form" :rules="rules" ref="form" @submit.native.prevent label-width="120px">
       <el-form-item label="Empresa" prop="company_id" v-if="role=='root'">
-        <el-select v-model="form.company_id">
+        <el-select v-model="form.company_id" :disabled="loading">
           <el-option v-for="item in companies" :key="item.id" :label="item.title" :value="item.id"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="Título" prop="title">
-        <el-input v-model="form.title"></el-input>
+        <el-input v-model="form.title" :disabled="loading"></el-input>
       </el-form-item>
       <el-form-item label="CEP" prop="cep">
-        <el-input v-model="form.cep" v-on:change="getCep()" v-mask="'#####-###'"></el-input>
+        <el-input
+          v-model="form.cep"
+          v-on:change="getCep()"
+          :disabled="loading"
+          v-mask="'#####-###'"
+        ></el-input>
       </el-form-item>
       <el-form-item label="Estado" prop="state_id">
-        <el-select v-model="form.state_id" @change="getCities(true)">
+        <el-select v-model="form.state_id" @change="getCities(true)" :disabled="loading">
           <el-option v-for="item in states" :key="item.id" :label="item.name" :value="item.id"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="Cidade" prop="city_id">
-        <el-select v-model="form.city_id">
+        <el-select v-model="form.city_id" :disabled="loading">
           <el-option v-for="item in cities" :key="item.id" :label="item.name" :value="item.id"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="CNPJ" prop="cnpj" v-mask="'##.###.###/####-##'">
-        <el-input v-model="form.cnpj"></el-input>
+        <el-input v-model="form.cnpj" :disabled="loading"></el-input>
       </el-form-item>
       <el-form-item label="Bairro" prop="neighborhood">
-        <el-input v-model="form.neighborhood"></el-input>
+        <el-input v-model="form.neighborhood" :disabled="loading"></el-input>
       </el-form-item>
       <el-form-item label="Endereço" prop="address">
-        <el-input v-model="form.address"></el-input>
+        <el-input v-model="form.address" :disabled="loading"></el-input>
       </el-form-item>
       <el-form-item label="Número" prop="number">
-        <el-input-number v-model="form.number" controls-position="right" :min="1" :max="99999"></el-input-number>
+        <el-input-number
+          v-model="form.number"
+          :disabled="loading"
+          controls-position="right"
+          :min="1"
+          :max="99999"
+        ></el-input-number>
       </el-form-item>
       <el-form-item>
         <router-link to="/client" class="pull-left">
@@ -79,47 +90,56 @@ export default {
       rules: {
         company_id: [
           {
-            required: this.role ? true : false
+            required: true,
+            message: "Campo obrigatório"
           }
         ],
         title: [
           {
-            required: true
+            required: true,
+            message: "Campo obrigatório"
           }
         ],
         address: [
           {
-            required: true
+            required: true,
+            message: "Campo obrigatório"
           }
         ],
         cep: [
           {
-            required: true
+            required: true,
+            message: "Campo obrigatório"
           }
         ],
         state_id: [
           {
-            required: true
+            required: true,
+            message: "Campo obrigatório"
           }
         ],
         city_id: [
           {
-            required: true
+            required: true,
+            message: "Campo obrigatório"
           }
         ],
         cnpj: [
           {
-            required: true
+            required: true,
+            message: "Campo obrigatório"
           }
         ],
         neighborhood: [
           {
-            required: true
+            required: true,
+            message: "Campo obrigatório"
           }
         ],
         number: [
           {
-            required: true
+            required: true,
+            message: "Campo obrigatório"
           }
         ]
       }

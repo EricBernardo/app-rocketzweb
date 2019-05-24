@@ -1,8 +1,8 @@
 <template>
   <div class="app-container">
-    <el-form :model="form" :rules="rules" ref="form">
+    <el-form :model="form" :rules="rules" ref="form" @submit.native.prevent>
       <el-form-item label="Papel" prop="role">
-        <el-select v-model="form.role" placeholder="Select">
+        <el-select :disabled="loading" v-model="form.role" placeholder="Select">
           <el-option
             v-for="item in rolesUser"
             :key="item.value"
@@ -12,26 +12,26 @@
         </el-select>
       </el-form-item>
       <el-form-item label="Empresa" prop="company_id">
-        <el-select v-model="form.company_id">
+        <el-select :disabled="loading" v-model="form.company_id">
           <el-option v-for="item in companies" :key="item.id" :label="item.title" :value="item.id"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="Cliente" prop="client_id">
-        <el-select v-model="form.client_id">
+        <el-select :disabled="loading" v-model="form.client_id">
           <el-option v-for="item in clients" :key="item.id" :label="item.title" :value="item.id"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="Nome" prop="name">
-        <el-input v-model="form.name"></el-input>
+        <el-input :disabled="loading" v-model="form.name"></el-input>
       </el-form-item>
       <el-form-item label="E-mail" prop="email">
-        <el-input v-model="form.email"></el-input>
+        <el-input :disabled="loading" v-model="form.email"></el-input>
       </el-form-item>
       <el-form-item label="Senha" prop="password">
-        <el-input type="password" v-model="form.password"></el-input>
+        <el-input type="password" :disabled="loading" v-model="form.password"></el-input>
       </el-form-item>
       <el-form-item label="Confirmar senha" prop="password_confirmation">
-        <el-input type="password" v-model="form.password_confirmation"></el-input>
+        <el-input type="password" :disabled="loading" v-model="form.password_confirmation"></el-input>
       </el-form-item>
       <el-form-item>
         <router-link :to="{ name: 'user' }" class="pull-left">
@@ -77,24 +77,28 @@ export default {
       rules: {
         name: [
           {
-            required: true
+            required: true,
+            message: "Campo obrigatório"
           }
         ],
         email: [
           {
             required: true,
+            message: "E-mail inválido",
             type: "email"
           }
         ],
         password: [
           {
             required: !this.$route.params.id,
-            min: 6
+            min: 8,
+            message: "Campo deve conter no mínimo 8 caracteres"
           }
         ],
         role: [
           {
-            required: true
+            required: true,
+            message: "Campo obrigatório"
           }
         ],
         password_confirmation: [
@@ -109,14 +113,10 @@ export default {
             trigger: "blur"
           }
         ],
-        client_id: [
-          {
-            required: true
-          }
-        ],
         company_id: [
           {
-            required: true
+            required: true,
+            message: "Campo obrigatório"
           }
         ]
       }

@@ -7,10 +7,10 @@
       @click="addProduct()"
       v-if="this.products.length"
     >Adicionar produto</el-button>
-    <el-form :model="form" :rules="rules" ref="form">
+    <el-form :model="form" :rules="rules" ref="form" @submit.native.prevent>
       <el-col :md="6" :sm="24">
         <el-form-item label="Cliente" prop="client_id">
-          <el-select v-model="form.client_id" filterable>
+          <el-select v-model="form.client_id" :disabled="loading" filterable>
             <el-option
               v-for="item in clients"
               :key="item.id"
@@ -71,19 +71,19 @@
       <el-col :md="6" :sm="24">
         <el-form-item label="Desconto" prop="discount">
           <el-col :md="20" :sm="24">
-            <money v-model="form.discount" class="el-input__inner"></money>
+            <money v-model="form.discount" :disabled="loading" class="el-input__inner"></money>
           </el-col>
         </el-form-item>
         <el-form-item label="Pago?" prop="paid">
-          <el-switch v-model="form.paid"></el-switch>
+          <el-switch v-model="form.paid" :disabled="loading"></el-switch>
         </el-form-item>
       </el-col>
       <el-col :md="6" :sm="24" class="pull-right">
         <el-form-item label="Subtotal" prop="subtotal">
-          <money v-model="form.subtotal" class="el-input__inner"></money>
+          <money v-model="form.subtotal" :disabled="loading" class="el-input__inner"></money>
         </el-form-item>
         <el-form-item label="Total" prop="total">
-          <money v-model="form.total" class="el-input__inner"></money>
+          <money v-model="form.total" :disabled="loading" class="el-input__inner"></money>
         </el-form-item>
       </el-col>
       <el-col class="line" :span="24">
@@ -127,12 +127,14 @@ export default {
       rules: {
         client_id: [
           {
-            required: true
+            required: true,
+            message: "Campo obrigatório"
           }
         ],
         products: [
           {
-            required: true
+            required: true,
+            message: "Campo obrigatório"
           }
         ]
       }

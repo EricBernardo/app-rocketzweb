@@ -1,13 +1,13 @@
 <template>
   <div class="app-container">
-    <el-form :model="form" :rules="rules" ref="form">
+    <el-form :model="form" :rules="rules" ref="form" @submit.native.prevent>
       <el-form-item label="Empresa" prop="company_id" v-if="role=='root'">
-        <el-select v-model="form.company_id">
+        <el-select v-model="form.company_id" :disabled="loading">
           <el-option v-for="item in companies" :key="item.id" :label="item.title" :value="item.id"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="Título" prop="title">
-        <el-input v-model="form.title"></el-input>
+        <el-input v-model="form.title" :disabled="loading"></el-input>
       </el-form-item>
       <el-form-item>
         <router-link :to="{ name: 'product_category' }" class="pull-left">
@@ -42,12 +42,14 @@ export default {
       rules: {
         company_id: [
           {
-            required: this.role ? true : false
+            required: true,
+            message: "Campo obrigatório"
           }
         ],
         title: [
           {
-            required: true
+            required: true,
+            message: "Campo obrigatório"
           }
         ]
       }
