@@ -58,7 +58,7 @@
           </el-table-column>
           <el-table-column label="Preço" min-width="150">
             <template slot-scope="scope">
-              <money v-model="scope.row.total" :readonly="true" class="el-input__inner"></money>
+              <money v-model="scope.row.total" :disabled="true" class="el-input__inner"></money>
             </template>
           </el-table-column>
           <el-table-column label="-" width="120" fixed="right">
@@ -133,7 +133,7 @@ export default {
         ],
         products: [
           {
-            required: true,
+            redisableddisabledquired: true,
             message: "Campo obrigatório"
           }
         ]

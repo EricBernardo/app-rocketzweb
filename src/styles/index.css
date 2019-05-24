@@ -401,6 +401,13 @@ button.el-button.pull-right.el-button--primary.el-button--mini {
   margin-top: 8px !important;
 }
 
+[disabled="disabled"] {
+  background-color: #f5f7fa !important;
+  border-color: #E4E7ED !important;
+  color: #C0C4CC !important;
+  cursor: not-allowed !important;
+}
+
 @media only screen and (max-width: 600px) {
   .el-message {
     min-width: 80% !important;
