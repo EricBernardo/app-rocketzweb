@@ -1,13 +1,8 @@
 import router from '@/router';
 import store from '@/store';
-import {
-  getToken,
-  removeToken
-} from '@/utils/auth';
+import { getToken, removeToken } from '@/utils/auth';
 import axios from 'axios';
-import {
-  Message
-} from 'element-ui';
+import { Message } from 'element-ui';
 
 // create an axios instance
 const service = axios.create({
@@ -92,6 +87,10 @@ service.interceptors.response.use(
         })
 
       })
+    }
+
+    if (error.response.status === 500) {
+      text = "<p>" + error.response.data.message + "</p>";
     }
 
     Message({
