@@ -1,24 +1,43 @@
 <template>
   <div class="app-container">
-    <ve-line :data="chartData"></ve-line>
+    <ve-histogram :data="chartData"></ve-histogram>
   </div>
 </template>
 
 <script>
-import VeLine from "v-charts/lib/line.common";
+const COLOR_LIST = ["green", "red", "blue"];
+import VeHistogram from "v-charts/lib/histogram.common";
 export default {
-  components: { VeLine },
+  components: { VeHistogram },
   data() {
     return {
       chartData: {
-        columns: ["date", "Vendas"],
+        columns: ["date", "paid", "paid_no", "total"],
         rows: [
-          { date: "01/01/2019", Vendas: 1231 },
-          { date: "01/02/2019", Vendas: 1223 },
-          { date: "01/03/2019", Vendas: 2123 },
-          { date: "01/04/2019", Vendas: 4123 },
-          { date: "01/05/2019", Vendas: 3123 },
-          { date: "01/06/2019", Vendas: 7123 }
+          {
+            date: "01/01",
+            paid: 1523,
+            paid_no: 1523,
+            total: 100
+          },
+          {
+            date: "01/02",
+            paid: 1223,
+            paid_no: 1523,
+            total: 100
+          },
+          {
+            date: "01/03",
+            paid: 2123,
+            paid_no: 1523,
+            total: 100
+          },
+          {
+            date: "01/04",
+            paid: 4123,
+            paid_no: 1523,
+            total: 100
+          }
         ]
       }
     };
