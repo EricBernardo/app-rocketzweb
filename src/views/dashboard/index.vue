@@ -1,46 +1,86 @@
 <template>
   <div class="app-container">
-    <ve-histogram :data="chartData"></ve-histogram>
+    <el-card class="box-card">
+      <div slot="header" class="clearfix">
+        <span>Faturamento</span>
+      </div>
+      <el-form :inline="true" class="demo-form-inline">
+        <el-form-item label="De">
+          <el-date-picker
+            v-model="start_date"
+            type="date"
+            format="dd/MM/yyyy"
+            placeholder="Data inicial"
+          ></el-date-picker>
+        </el-form-item>
+        <el-form-item label="Até">
+          <el-date-picker
+            v-model="end_date"
+            type="date"
+            format="dd/MM/yyyy"
+            placeholder="Data final"
+          ></el-date-picker>
+        </el-form-item>
+        <el-form-item>
+          <el-button :loading="loading" type="primary" @click="get">Filtrar</el-button>
+        </el-form-item>
+      </el-form>
+      <el-col :md="24" :sm="24">
+        <ve-histogram :data="chartData" :settings="chartSettings"></ve-histogram>
+      </el-col>
+    </el-card>
   </div>
 </template>
 
 <script>
+import { get } from "@/api/dashboard";
 const COLOR_LIST = ["green", "red", "blue"];
 import VeHistogram from "v-charts/lib/histogram.common";
 export default {
   components: { VeHistogram },
   data() {
+    this.chartSettings = {
+      label: {
+        normal: { show: true, position: "top" }
+      },
+      legendName: { paid: "Pago", paid_no: "Não pago", total: "Total" },
+      labelMap: { paid: "Pago", paid_no: "Não pago", total: "Total" }
+    };
     return {
+      loading: false,
+      start_date: this.$moment()
+        .add(-7, "days")
+        .format("YYYY-MM-DD"),
+      end_date: this.$moment().format("YYYY-MM-DD"),
       chartData: {
         columns: ["date", "paid", "paid_no", "total"],
-        rows: [
-          {
-            date: "01/01",
-            paid: 1523,
-            paid_no: 1523,
-            total: 100
-          },
-          {
-            date: "01/02",
-            paid: 1223,
-            paid_no: 1523,
-            total: 100
-          },
-          {
-            date: "01/03",
-            paid: 2123,
-            paid_no: 1523,
-            total: 100
-          },
-          {
-            date: "01/04",
-            paid: 4123,
-            paid_no: 1523,
-            total: 100
-          }
-        ]
+        rows: []
       }
     };
+  },
+  created() {
+    this.get();
+  },
+  methods: {
+    get() {
+      this.loading = true;
+      get({ start_date: this.start_date, end_date: this.end_date }).then(
+        response => {
+          this.chartData.rows = [];
+          Object.keys(response.data.data.billings).forEach(date => {
+            this.chartData.rows.push({
+              date: this.$moment(date).format("DD/MM/YYYY"),
+              paid: response.data.data.billings[date].paid,
+              paid_no: response.data.data.billings[date].paid_no,
+              total:
+                response.data.data.billings[date].paid -
+                response.data.data.billings[date].paid_no
+            });
+            this.loading = false;
+          });
+        }
+      );
+    }
   }
 };
 </script>
