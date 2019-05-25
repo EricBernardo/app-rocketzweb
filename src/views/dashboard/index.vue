@@ -50,8 +50,8 @@ export default {
       loading: false,
       start_date: this.$moment()
         .add(-7, "days")
-        .format("YYYY-MM-DD"),
-      end_date: this.$moment().format("YYYY-MM-DD"),
+        .format("YYYY-MM-DDT00:00:00"),
+      end_date: this.$moment().format("YYYY-MM-DDT00:00:00"),
       chartData: {
         columns: ["date", "paid", "paid_no", "total"],
         rows: []
@@ -64,22 +64,24 @@ export default {
   methods: {
     get() {
       this.loading = true;
-      get({ start_date: this.start_date, end_date: this.end_date }).then(
-        response => {
-          this.chartData.rows = [];
-          Object.keys(response.data.data.billings).forEach(date => {
-            this.chartData.rows.push({
-              date: this.$moment(date).format("DD/MM/YYYY"),
-              paid: response.data.data.billings[date].paid,
-              paid_no: response.data.data.billings[date].paid_no,
-              total:
-                response.data.data.billings[date].paid -
-                response.data.data.billings[date].paid_no
-            });
-            this.loading = false;
+      let params = {
+        start_date: this.$moment(this.start_date).format("YYYY-MM-DD"),
+        end_date: this.$moment(this.end_date).format("YYYY-MM-DD")
+      };
+      get(params).then(response => {
+        this.chartData.rows = [];
+        Object.keys(response.data.data.billings).forEach(date => {
+          this.chartData.rows.push({
+            date: this.$moment(date).format("DD/MM/YYYY"),
+            paid: response.data.data.billings[date].paid,
+            paid_no: response.data.data.billings[date].paid_no,
+            total:
+              response.data.data.billings[date].paid -
+              response.data.data.billings[date].paid_no
           });
-        }
-      );
+        });
+        this.loading = false;
+      });
     }
   }
 };
