@@ -114,6 +114,13 @@ service.interceptors.response.use(
 
     if (error.response.status === 401) {
 
+      Message({
+        message: '<b>Não autorizado</b>',
+        type: 'error',
+        duration: 5 * 1000,
+        dangerouslyUseHTMLString: true
+      })
+
       removeToken()
 
       if (location.hash.indexOf('login') === -1) {
