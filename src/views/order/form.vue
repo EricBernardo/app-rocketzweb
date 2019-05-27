@@ -58,7 +58,12 @@
           </el-table-column>
           <el-table-column label="Preço" min-width="150">
             <template slot-scope="scope">
-              <money v-model="scope.row.total" :disabled="true" class="el-input__inner"></money>
+              <money
+                v-model="scope.row.total"
+                :disabled="scope.row.block"
+                :readonly="true"
+                class="el-input__inner"
+              ></money>
             </template>
           </el-table-column>
           <el-table-column label="-" width="120" fixed="right">
@@ -81,6 +86,7 @@
           <el-date-picker
             :disabled="loading"
             format="dd/MM/yyyy"
+            value-format="yyyy-MM-dd"
             v-model="form.date"
             type="date"
             placeholder="Data"
@@ -89,10 +95,10 @@
       </el-col>
       <el-col :md="6" :sm="24" class="pull-right">
         <el-form-item label="Subtotal" prop="subtotal">
-          <money v-model="form.subtotal" :disabled="loading" class="el-input__inner"></money>
+          <money v-model="form.subtotal" :readonly="true" class="el-input__inner"></money>
         </el-form-item>
         <el-form-item label="Total" prop="total">
-          <money v-model="form.total" :disabled="loading" class="el-input__inner"></money>
+          <money v-model="form.total" :readonly="true" class="el-input__inner"></money>
         </el-form-item>
       </el-col>
       <el-col class="line" :span="24">
@@ -196,9 +202,7 @@ export default {
           form.paid = response.data.paid ? true : false;
           form.subtotal = response.data.subtotal;
           form.total = response.data.total;
-          form.date = response.data.date
-            ? response.data.date + "T00:00:00"
-            : null;
+          form.date = response.data.date;
           this.loading = false;
         });
       }
@@ -258,8 +262,8 @@ export default {
       this.$refs[formName].validate(valid => {
         if (valid) {
           this.loading = true;
-          this.form.date = this.$moment(this.form.date).format("YYYY-MM-DD");
-          save(this.form, this.$route.params.id)
+          var form = this.form;
+          save(form, this.$route.params.id)
             .then(response => {
               this.$message({
                 message: "Salvo com sucesso",
