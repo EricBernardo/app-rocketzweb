@@ -1,8 +1,8 @@
 <template>
   <div class="app-container">
     <el-form :model="form" :rules="rules" ref="form" @submit.native.prevent>
-      <el-form-item label="Papel" prop="role">
-        <el-select :disabled="loading" v-model="form.role" placeholder="Select">
+      <el-form-item label="Papel" prop="role" v-if="rolesUser.length">
+        <el-select filterable :disabled="loading" v-model="form.role" placeholder="Select">
           <el-option
             v-for="item in rolesUser"
             :key="item.value"
@@ -11,13 +11,21 @@
           ></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="Empresa" prop="company_id">
-        <el-select :disabled="loading" v-model="form.company_id">
+      <el-form-item
+        label="Empresa"
+        prop="company_id"
+        v-if="companies.length && (this.form.role == 'administrator' || this.form.role == 'client')"
+      >
+        <el-select filterable :disabled="loading" v-model="form.company_id">
           <el-option v-for="item in companies" :key="item.id" :label="item.title" :value="item.id"></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="Cliente" prop="client_id">
-        <el-select :disabled="loading" v-model="form.client_id">
+      <el-form-item
+        label="Cliente"
+        prop="client_id"
+        v-if="clients.length && this.form.role == 'client'"
+      >
+        <el-select filterable :disabled="loading" v-model="form.client_id">
           <el-option v-for="item in clients" :key="item.id" :label="item.title" :value="item.id"></el-option>
         </el-select>
       </el-form-item>
@@ -50,6 +58,7 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 import { getAllCompany } from "@/api/company";
 import { getAllClients } from "@/api/client";
 import { show, save } from "@/api/user";
@@ -60,7 +69,6 @@ export default {
       companies: [],
       clients: [],
       rolesUser: [
-        { value: "root", label: "Root" },
         { value: "administrator", label: "Administrador" },
         { value: "client", label: "Cliente" }
       ],
@@ -118,18 +126,32 @@ export default {
             required: true,
             message: "Campo obrigatório"
           }
+        ],
+        client_id: [
+          {
+            required: true,
+            message: "Campo obrigatório"
+          }
         ]
       }
     };
   },
+  computed: {
+    ...mapGetters(["role"])
+  },
   created() {
-    getAllCompany().then(response => {
-      this.companies = response.data.data;
-    });
+    if (this.role == "root") {
+      this.rolesUser.push({ value: "root", label: "Root" });
+      getAllCompany().then(response => {
+        this.companies = response.data.data;
+      });
+    }
 
-    getAllClients().then(response => {
-      this.clients = response.data.data;
-    });
+    if (this.role == "root" || this.role == "administrator") {
+      getAllClients().then(response => {
+        this.clients = response.data.data;
+      });
+    }
 
     if (this.$route.params.id) {
       this.loading = true;

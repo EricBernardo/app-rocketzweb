@@ -9,6 +9,7 @@
     <breadcrumb class="breadcrumb-container"/>
 
     <div class="right-menu">
+      {{name}}
       <el-dropdown class="avatar-container" trigger="click">
         <div class="avatar-wrapper">
           <svg-icon icon-class="user"/>
@@ -38,7 +39,7 @@ export default {
     Hamburger
   },
   computed: {
-    ...mapGetters(["sidebar", "avatar"])
+    ...mapGetters(["sidebar", "name"])
   },
   methods: {
     toggleSideBar() {
@@ -100,30 +101,6 @@ export default {
 
         &:hover {
           background: rgba(0, 0, 0, 0.025);
-        }
-      }
-    }
-
-    .avatar-container {
-      margin-right: 30px;
-
-      .avatar-wrapper {
-        margin-top: 5px;
-        position: relative;
-
-        .user-avatar {
-          cursor: pointer;
-          width: 40px;
-          height: 40px;
-          border-radius: 10px;
-        }
-
-        .el-icon-caret-bottom {
-          cursor: pointer;
-          position: absolute;
-          right: -20px;
-          top: 25px;
-          font-size: 12px;
         }
       }
     }

@@ -2,7 +2,7 @@
   <div class="app-container">
     <el-form :model="form" :rules="rules" ref="form" @submit.native.prevent label-width="120px">
       <el-form-item label="Empresa" prop="company_id" v-if="role=='root'">
-        <el-select v-model="form.company_id" :disabled="loading">
+        <el-select filterable v-model="form.company_id" :disabled="loading">
           <el-option v-for="item in companies" :key="item.id" :label="item.title" :value="item.id"></el-option>
         </el-select>
       </el-form-item>
@@ -18,12 +18,12 @@
         ></el-input>
       </el-form-item>
       <el-form-item label="Estado" prop="state_id">
-        <el-select v-model="form.state_id" @change="getCities(true)" :disabled="loading">
+        <el-select filterable v-model="form.state_id" @change="getCities(true)" :disabled="loading">
           <el-option v-for="item in states" :key="item.id" :label="item.name" :value="item.id"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="Cidade" prop="city_id">
-        <el-select v-model="form.city_id" :disabled="loading">
+        <el-select filterable v-model="form.city_id" :disabled="loading">
           <el-option v-for="item in cities" :key="item.id" :label="item.name" :value="item.id"></el-option>
         </el-select>
       </el-form-item>

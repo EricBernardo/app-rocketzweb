@@ -5,6 +5,12 @@
     </router-link>
 
     <el-table v-loading="listLoading" :data="list.data" element-loading-text="Carregando..." border>
+      <el-table-column label="Empresa" v-if="role == 'root'">
+        <template slot-scope="scope">{{ scope.row.company ? scope.row.company.title : '' }}</template>
+      </el-table-column>
+      <el-table-column label="Cliente">
+        <template slot-scope="scope">{{ scope.row.client ? scope.row.client.title : '' }}</template>
+      </el-table-column>
       <el-table-column label="Nome">
         <template slot-scope="scope">{{ scope.row.name }}</template>
       </el-table-column>
@@ -28,6 +34,7 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 import { get, destroy } from "@/api/user";
 
 export default {
@@ -46,6 +53,9 @@ export default {
       list: {},
       listLoading: false
     };
+  },
+  computed: {
+    ...mapGetters(["role"])
   },
   created() {
     this.fetchData();

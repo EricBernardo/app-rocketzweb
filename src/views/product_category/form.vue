@@ -2,7 +2,7 @@
   <div class="app-container">
     <el-form :model="form" :rules="rules" ref="form" @submit.native.prevent>
       <el-form-item label="Empresa" prop="company_id" v-if="role=='root'">
-        <el-select v-model="form.company_id" :disabled="loading">
+        <el-select filterable v-model="form.company_id" :disabled="loading">
           <el-option v-for="item in companies" :key="item.id" :label="item.title" :value="item.id"></el-option>
         </el-select>
       </el-form-item>

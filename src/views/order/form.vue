@@ -5,11 +5,11 @@
       class="pull-right m-b-10"
       size="mini"
       @click="addProduct()"
-      v-if="this.products.length"
+      :disabled="!this.products.length"
     >Adicionar produto</el-button>
     <el-form :model="form" :rules="rules" ref="form" @submit.native.prevent>
       <el-col :md="6" :sm="24">
-        <el-form-item label="Cliente" prop="client_id">
+        <el-form-item label="Cliente" prop="client_id" v-if="clients.length">
           <el-select v-model="form.client_id" :disabled="loading" filterable>
             <el-option
               v-for="item in clients"
@@ -133,7 +133,7 @@ export default {
         ],
         products: [
           {
-            redisableddisabledquired: true,
+            required: true,
             message: "Campo obrigatório"
           }
         ]
@@ -146,11 +146,14 @@ export default {
   created() {
     let form = this.form;
 
+    if (this.role == "root" || this.role == "administrator") {
+      getAllClients().then(response => {
+        this.clients = response.data.data;
+      });
+    }
+
     getAllProducts().then(response => {
       this.products = response.data.data;
-    });
-    getAllClients().then(response => {
-      this.clients = response.data.data;
     });
 
     this.getOrder();

@@ -31,244 +31,244 @@ Vue.use(Router)
  * all roles can be accessed
  */
 export const constantRoutes = [{
-    path: '/login',
-    roles: [],
-    component: () => import('@/views/login/index'),
-    hidden: true
-  },
+  path: '/login',
+  roles: [],
+  component: () => import('@/views/login/index'),
+  hidden: true
+},
 
-  {
-    path: '/404',
-    roles: [],
-    component: () => import('@/views/404'),
+{
+  path: '/404',
+  roles: [],
+  component: () => import('@/views/404'),
+  hidden: true
+},
+{
+  path: '/',
+  component: Layout,
+  roles: ['root', 'administrator', 'client'],
+  meta: {
+    title: 'Dashboard',
+    icon: 'dashboard'
+  },
+  children: [{
+    path: '',
+    name: 'dashboard',
+    component: () => import('@/views/dashboard/index'),
+    hidden: true
+  }]
+},
+{
+  path: '/company',
+  component: Layout,
+  roles: ['root'],
+  meta: {
+    title: 'Empresa',
+    icon: 'company'
+  },
+  children: [{
+    path: '',
+    name: 'company',
+    component: () => import('@/views/company/list'),
     hidden: true
   },
   {
-    path: '/',
-    component: Layout,
-    roles: ['root', 'administrator', 'client'],
+    path: 'create',
+    name: 'company.create',
+    component: () => import('@/views/company/form'),
+    hidden: true,
     meta: {
-      title: 'Dashboard',
-      icon: 'dashboard'
-    },
-    children: [{
-      path: '',
-      name: 'dashboard',
-      component: () => import('@/views/dashboard/index'),
-      hidden: true
-    }]
+      title: 'Cadastrar'
+    }
   },
   {
-    path: '/company',
-    component: Layout,
-    roles: ['root'],
+    path: 'edit/:id',
+    name: 'company.edit',
+    component: () => import('@/views/company/form'),
+    hidden: true,
     meta: {
-      title: 'Empresa',
-      icon: 'company'
-    },
-    children: [{
-        path: '',
-        name: 'company',
-        component: () => import('@/views/company/list'),
-        hidden: true
-      },
-      {
-        path: 'create',
-        name: 'company.create',
-        component: () => import('@/views/company/form'),
-        hidden: true,
-        meta: {
-          title: 'Cadastrar'
-        }
-      },
-      {
-        path: 'edit/:id',
-        name: 'company.edit',
-        component: () => import('@/views/company/form'),
-        hidden: true,
-        meta: {
-          title: 'Editar'
-        }
-      }
-    ]
-  },
-  {
-    path: '/client',
-    component: Layout,
-    roles: ['root', 'administrator', 'client'],
-    meta: {
-      title: 'Cliente',
-      icon: 'users'
-    },
-    children: [{
-        path: '',
-        name: 'client',
-        component: () => import('@/views/client/list'),
-        hidden: true
-      },
-      {
-        path: 'create',
-        name: 'client.create',
-        component: () => import('@/views/client/form'),
-        hidden: true,
-        meta: {
-          title: 'Cadastrar'
-        }
-      },
-      {
-        path: 'edit/:id',
-        name: 'client.edit',
-        component: () => import('@/views/client/form'),
-        hidden: true,
-        meta: {
-          title: 'Editar'
-        }
-      }
-    ]
-  },
-  {
-    path: '/product_category',
-    component: Layout,
-    roles: ['root', 'administrator', 'client'],
-    meta: {
-      title: 'Categoria',
-      icon: 'category'
-    },
-    children: [{
-        path: '',
-        name: 'product_category',
-        component: () => import('@/views/product_category/list'),
-        hidden: true
-      },
-      {
-        path: 'create',
-        name: 'product_category.create',
-        component: () => import('@/views/product_category/form'),
-        hidden: true,
-        meta: {
-          title: 'Cadastrar'
-        }
-      },
-      {
-        path: 'edit/:id',
-        name: 'product_category.edit',
-        component: () => import('@/views/product_category/form'),
-        hidden: true,
-        meta: {
-          title: 'Editar'
-        }
-      }
-    ]
-  },
-  {
-    path: '/product',
-    component: Layout,
-    roles: ['root', 'administrator', 'client'],
-    meta: {
-      title: 'Produto',
-      icon: 'product'
-    },
-    children: [{
-        path: '',
-        name: 'product',
-        component: () => import('@/views/product/list'),
-        hidden: true
-      },
-      {
-        path: 'create',
-        name: 'product.create',
-        component: () => import('@/views/product/form'),
-        hidden: true,
-        meta: {
-          title: 'Cadastrar'
-        }
-      },
-      {
-        path: 'edit/:id',
-        name: 'product.edit',
-        component: () => import('@/views/product/form'),
-        hidden: true,
-        meta: {
-          title: 'Editar'
-        }
-      }
-    ]
-  },
-  {
-    path: '/user',
-    component: Layout,
-    roles: ['root', 'administrator'],
-    meta: {
-      title: 'Usuário',
-      icon: 'user'
-    },
-    children: [{
-        path: '',
-        name: 'user',
-        component: () => import('@/views/user/list'),
-        hidden: true
-      },
-      {
-        path: 'create',
-        name: 'user.create',
-        component: () => import('@/views/user/form'),
-        hidden: true,
-        meta: {
-          title: 'Cadastrar'
-        }
-      },
-      {
-        path: 'edit/:id',
-        name: 'user.edit',
-        component: () => import('@/views/user/form'),
-        hidden: true,
-        meta: {
-          title: 'Editar'
-        }
-      }
-    ]
-  },
-  {
-    path: '/order',
-    component: Layout,
-    roles: ['root', 'administrator', 'client'],
-    meta: {
-      title: 'Pedido',
-      icon: 'order'
-    },
-    children: [{
-        path: '',
-        name: 'order',
-        component: () => import('@/views/order/index'),
-        hidden: true
-      },
-      {
-        path: 'create',
-        name: 'order.create',
-        component: () => import('@/views/order/form'),
-        hidden: true,
-        meta: {
-          title: 'Cadastrar'
-        }
-      },
-      {
-        path: 'edit/:id',
-        name: 'order.edit',
-        component: () => import('@/views/order/form'),
-        hidden: true,
-        meta: {
-          title: 'Editar'
-        }
-      }
-    ]
-  },
-
-  // 404 page must be placed at the end !!!
-  {
-    path: '*',
-    redirect: '/404',
-    hidden: true
+      title: 'Editar'
+    }
   }
+  ]
+},
+{
+  path: '/client',
+  component: Layout,
+  roles: ['root', 'administrator'],
+  meta: {
+    title: 'Cliente',
+    icon: 'users'
+  },
+  children: [{
+    path: '',
+    name: 'client',
+    component: () => import('@/views/client/list'),
+    hidden: true
+  },
+  {
+    path: 'create',
+    name: 'client.create',
+    component: () => import('@/views/client/form'),
+    hidden: true,
+    meta: {
+      title: 'Cadastrar'
+    }
+  },
+  {
+    path: 'edit/:id',
+    name: 'client.edit',
+    component: () => import('@/views/client/form'),
+    hidden: true,
+    meta: {
+      title: 'Editar'
+    }
+  }
+  ]
+},
+{
+  path: '/product_category',
+  component: Layout,
+  roles: ['root', 'administrator'],
+  meta: {
+    title: 'Categoria',
+    icon: 'category'
+  },
+  children: [{
+    path: '',
+    name: 'product_category',
+    component: () => import('@/views/product_category/list'),
+    hidden: true
+  },
+  {
+    path: 'create',
+    name: 'product_category.create',
+    component: () => import('@/views/product_category/form'),
+    hidden: true,
+    meta: {
+      title: 'Cadastrar'
+    }
+  },
+  {
+    path: 'edit/:id',
+    name: 'product_category.edit',
+    component: () => import('@/views/product_category/form'),
+    hidden: true,
+    meta: {
+      title: 'Editar'
+    }
+  }
+  ]
+},
+{
+  path: '/product',
+  component: Layout,
+  roles: ['root', 'administrator'],
+  meta: {
+    title: 'Produto',
+    icon: 'product'
+  },
+  children: [{
+    path: '',
+    name: 'product',
+    component: () => import('@/views/product/list'),
+    hidden: true
+  },
+  {
+    path: 'create',
+    name: 'product.create',
+    component: () => import('@/views/product/form'),
+    hidden: true,
+    meta: {
+      title: 'Cadastrar'
+    }
+  },
+  {
+    path: 'edit/:id',
+    name: 'product.edit',
+    component: () => import('@/views/product/form'),
+    hidden: true,
+    meta: {
+      title: 'Editar'
+    }
+  }
+  ]
+},
+{
+  path: '/user',
+  component: Layout,
+  roles: ['root', 'administrator'],
+  meta: {
+    title: 'Usuário',
+    icon: 'user'
+  },
+  children: [{
+    path: '',
+    name: 'user',
+    component: () => import('@/views/user/list'),
+    hidden: true
+  },
+  {
+    path: 'create',
+    name: 'user.create',
+    component: () => import('@/views/user/form'),
+    hidden: true,
+    meta: {
+      title: 'Cadastrar'
+    }
+  },
+  {
+    path: 'edit/:id',
+    name: 'user.edit',
+    component: () => import('@/views/user/form'),
+    hidden: true,
+    meta: {
+      title: 'Editar'
+    }
+  }
+  ]
+},
+{
+  path: '/order',
+  component: Layout,
+  roles: ['root', 'administrator', 'client'],
+  meta: {
+    title: 'Pedido',
+    icon: 'order'
+  },
+  children: [{
+    path: '',
+    name: 'order',
+    component: () => import('@/views/order/list'),
+    hidden: true
+  },
+  {
+    path: 'create',
+    name: 'order.create',
+    component: () => import('@/views/order/form'),
+    hidden: true,
+    meta: {
+      title: 'Cadastrar'
+    }
+  },
+  {
+    path: 'edit/:id',
+    name: 'order.edit',
+    component: () => import('@/views/order/form'),
+    hidden: true,
+    meta: {
+      title: 'Editar'
+    }
+  }
+  ]
+},
+
+// 404 page must be placed at the end !!!
+{
+  path: '*',
+  redirect: '/404',
+  hidden: true
+}
 ]
 
 const createRouter = () => new Router({

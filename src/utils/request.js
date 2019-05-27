@@ -93,12 +93,16 @@ service.interceptors.response.use(
       text = "<p>" + error.response.data.message + "</p>";
     }
 
-    Message({
-      message: '<b>Atenção</b>' + text,
-      type: 'error',
-      duration: 5 * 1000,
-      dangerouslyUseHTMLString: true
-    })
+    if (text) {
+
+      Message({
+        message: '<b>Atenção</b>' + text,
+        type: 'error',
+        duration: 5 * 1000,
+        dangerouslyUseHTMLString: true
+      })
+
+    }
 
     if (error.response.status === 403) {
 
