@@ -77,6 +77,15 @@
         <el-form-item label="Pago?" prop="paid">
           <el-switch v-model="form.paid" :disabled="loading"></el-switch>
         </el-form-item>
+        <el-form-item label="Data" prop="date">
+          <el-date-picker
+            :disabled="loading"
+            format="dd/MM/yyyy"
+            v-model="form.date"
+            type="date"
+            placeholder="Data"
+          ></el-date-picker>
+        </el-form-item>
       </el-col>
       <el-col :md="6" :sm="24" class="pull-right">
         <el-form-item label="Subtotal" prop="subtotal">
@@ -122,10 +131,17 @@ export default {
         products: [],
         paid: false,
         subtotal: 0,
-        total: 0
+        total: 0,
+        date: null
       },
       rules: {
         client_id: [
+          {
+            required: true,
+            message: "Campo obrigatório"
+          }
+        ],
+        date: [
           {
             required: true,
             message: "Campo obrigatório"
@@ -180,6 +196,9 @@ export default {
           form.paid = response.data.paid ? true : false;
           form.subtotal = response.data.subtotal;
           form.total = response.data.total;
+          form.date = response.data.date
+            ? response.data.date + "T00:00:00"
+            : null;
           this.loading = false;
         });
       }
@@ -239,6 +258,7 @@ export default {
       this.$refs[formName].validate(valid => {
         if (valid) {
           this.loading = true;
+          this.form.date = this.$moment(this.form.date).format("YYYY-MM-DD");
           save(this.form, this.$route.params.id)
             .then(response => {
               this.$message({
