@@ -146,6 +146,10 @@ button.el-button.pull-right.el-button--primary.el-button--mini {
   cursor: not-allowed !important;
 }
 
+.avatar-container.el-dropdown {
+  cursor: pointer;
+}
+
 @media only screen and (max-width: 600px) {
   .el-message {
     min-width: 80% !important;

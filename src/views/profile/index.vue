@@ -61,17 +61,14 @@
 import { mapGetters } from "vuex";
 import { getAllCompany } from "@/api/company";
 import { getAllClients } from "@/api/client";
-import { show, save } from "@/api/user";
+import { getProfile, saveProfile } from "@/api/user";
 
 export default {
   data() {
     return {
       companies: [],
       clients: [],
-      rolesUser: [
-        { value: "administrator", label: "Administrador" },
-        { value: "client", label: "Cliente" }
-      ],
+      rolesUser: [{ value: "client", label: "Cliente" }],
       loading: false,
       form: {
         name: null,
@@ -98,7 +95,7 @@ export default {
         ],
         password: [
           {
-            required: !this.$route.params.id,
+            required: false,
             min: 8,
             message: "Campo deve conter no mínimo 8 caracteres"
           }
@@ -146,41 +143,37 @@ export default {
         this.companies = response.data.data;
       });
     }
-
+    if (this.role == "administrator") {
+      this.rolesUser.push({ value: "administrator", label: "Administrador" });
+    }
     if (this.role == "root" || this.role == "administrator") {
       getAllClients().then(response => {
         this.clients = response.data.data;
       });
     }
-
-    this.getUser();
+    this.getProfile();
   },
   methods: {
-    getUser() {
-      if (this.$route.params.id) {
-        this.loading = true;
-        show(this.$route.params.id).then(response => {
-          Object.keys(this.form).forEach(key => {
-            this.form[key] = response.data.data[key];
-          });
-          this.loading = false;
+    getProfile() {
+      this.loading = true;
+      getProfile().then(response => {
+        Object.keys(this.form).forEach(key => {
+          this.form[key] = response.data.data[key];
         });
-      }
+        this.loading = false;
+      });
     },
     onSubmit(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
           this.loading = true;
-          save(this.form, this.$route.params.id)
+          saveProfile(this.form)
             .then(response => {
               this.$message({
                 message: "Salvo com sucesso",
                 type: "success",
                 duration: 5 * 1000
               });
-              if (!this.$route.params.id) {
-                this.$refs[formName].resetFields();
-              }
             })
             .finally(responde => {
               this.loading = false;

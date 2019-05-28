@@ -59,6 +59,21 @@ export const constantRoutes = [{
   }]
 },
 {
+  path: '/profile',
+  component: Layout,
+  roles: ['root', 'administrator', 'client'],
+  hidden: true,
+  meta: {
+    title: 'Perfil',
+    icon: 'profile'
+  },
+  children: [{
+    path: '',
+    name: 'profile',
+    component: () => import('@/views/profile/index'),
+  }]
+},
+{
   path: '/company',
   component: Layout,
   roles: ['root'],

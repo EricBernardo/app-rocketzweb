@@ -10,6 +10,7 @@
             v-model="start_date"
             type="date"
             format="dd/MM/yyyy"
+            value-format="yyyy-MM-dd"
             placeholder="Data inicial"
           ></el-date-picker>
         </el-form-item>
@@ -18,6 +19,7 @@
             v-model="end_date"
             type="date"
             format="dd/MM/yyyy"
+            value-format="yyyy-MM-dd"
             placeholder="Data final"
           ></el-date-picker>
         </el-form-item>
@@ -73,8 +75,8 @@ export default {
       client_id: null,
       start_date: this.$moment()
         .add(-7, "days")
-        .format("YYYY-MM-DDT00:00:00"),
-      end_date: this.$moment().format("YYYY-MM-DDT00:00:00"),
+        .format("YYYY-MM-DD"),
+      end_date: this.$moment().format("YYYY-MM-DD"),
       chartData: {
         columns: ["date", "total"],
         rows: []
@@ -103,8 +105,8 @@ export default {
     get() {
       this.loading = true;
       let params = {
-        start_date: this.$moment(this.start_date).format("YYYY-MM-DD"),
-        end_date: this.$moment(this.end_date).format("YYYY-MM-DD"),
+        start_date: this.start_date,
+        end_date: this.end_date,
         client_id: this.client_id,
         company_id: this.company_id
       };

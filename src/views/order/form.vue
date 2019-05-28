@@ -205,6 +205,8 @@ export default {
           form.date = response.data.date;
           this.loading = false;
         });
+      } else {
+        this.form.date = this.$moment().format("YYYY-MM-DD");
       }
     },
     calculateProduct(row) {

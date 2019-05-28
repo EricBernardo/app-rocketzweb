@@ -8,10 +8,18 @@ export function login(data) {
   })
 }
 
-export function getInfo(token) {
+export function getProfile() {
   return request({
-    url: '/me',
+    url: '/profile',
     method: 'get'
+  })
+}
+
+export function saveProfile(data) {
+  return request({
+    url: '/profile',
+    method: 'put',
+    data
   })
 }
 

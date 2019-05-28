@@ -16,8 +16,8 @@
           <i class="el-icon-caret-bottom"/>
         </div>
         <el-dropdown-menu slot="dropdown" class="user-dropdown">
-          <router-link to="/">
-            <el-dropdown-item>Dashboard</el-dropdown-item>
+          <router-link :to="{ name: 'profile' }">
+            <el-dropdown-item>Meu Perfil</el-dropdown-item>
           </router-link>
           <el-dropdown-item divided>
             <span style="display:block;" @click="logout">Sair</span>
