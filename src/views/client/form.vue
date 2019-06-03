@@ -8,33 +8,33 @@
       </el-form-item>
       <el-form-item label="Título" prop="title">
         <el-input v-model="form.title" :disabled="loading"></el-input>
+      </el-form-item>      
+      <el-form-item label="CNPJ" prop="cnpj" v-mask="'##.###.###/####-##'">
+        <el-input v-model="form.cnpj" :disabled="loading"></el-input>
       </el-form-item>
       <el-form-item label="CEP" prop="cep">
         <el-input
           v-model="form.cep"
           v-on:change="getCep()"
-          :disabled="loading"
+          :disabled="loading || loading_cep"
           v-mask="'#####-###'"
         ></el-input>
       </el-form-item>
       <el-form-item label="Estado" prop="state_id">
-        <el-select filterable v-model="form.state_id" @change="getCities(true)" :disabled="loading">
+        <el-select filterable v-model="form.state_id" @change="getCities(true)" :disabled="loading || loading_cep || loading_cities">
           <el-option v-for="item in states" :key="item.id" :label="item.name" :value="item.id"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="Cidade" prop="city_id">
-        <el-select filterable v-model="form.city_id" :disabled="loading">
+        <el-select filterable v-model="form.city_id" :disabled="loading || loading_cep || loading_cities">
           <el-option v-for="item in cities" :key="item.id" :label="item.name" :value="item.id"></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="CNPJ" prop="cnpj" v-mask="'##.###.###/####-##'">
-        <el-input v-model="form.cnpj" :disabled="loading"></el-input>
-      </el-form-item>
       <el-form-item label="Bairro" prop="neighborhood">
-        <el-input v-model="form.neighborhood" :disabled="loading"></el-input>
+        <el-input v-model="form.neighborhood" :disabled="loading || loading_cep"></el-input>
       </el-form-item>
       <el-form-item label="Endereço" prop="address">
-        <el-input v-model="form.address" :disabled="loading"></el-input>
+        <el-input v-model="form.address" :disabled="loading || loading_cep"></el-input>
       </el-form-item>
       <el-form-item label="Número" prop="number">
         <el-input-number
@@ -73,6 +73,8 @@ export default {
   data() {
     return {
       loading: false,
+      loading_cep: false,
+      loading_cities: false,
       states: [],
       cities: [],
       companies: [],
@@ -195,6 +197,8 @@ export default {
       });
     },
     getCities(change = false, city = null) {
+      let __this = this;
+      __this.loading_cities = true;
       getCities(this.form.state_id).then(response => {
         this.cities = response.data.data;
         let form = this.form;
@@ -208,25 +212,34 @@ export default {
             });
           }
         }
+        __this.loading_cities = false;
       });
     },
     getCep() {
       let __this = this;
-      __this.loading = true;
+      
+      __this.loading_cep = true;
+      
+      __this.cities = [];
+
+      __this.form.neighborhood = null;
+      __this.form.address = null;
+      __this.form.state_id = null;
+      __this.form.city_id = null;
+
       getCEP(this.form.cep).then(response => {
         if (response.data.data) {
-          let form = this.form;
-          let cities = this.cities;
-          form.neighborhood = response.data.data.bairro;
-          form.address = response.data.data.logradouro;
-          Object.values(this.states).forEach(function(state) {
+          __this.form.neighborhood = response.data.data.bairro;
+          __this.form.address = response.data.data.logradouro;
+          Object.values(__this.states).forEach(function(state) {
             if (state.abbr == response.data.data.uf) {
-              form.state_id = state.id;
-              __this.getCities(form.state_id, response.data.data.localidade);
+              __this.form.state_id = state.id;
+              __this.getCities(__this.form.state_id, response.data.data.localidade);
             }
           });
         }
-        __this.loading = false;
+      }).finally(response => {
+        __this.loading_cep = false;
       });
     }
   }
