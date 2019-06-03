@@ -41,6 +41,7 @@
           name="password"
           tabindex="2"
           auto-complete="on"
+          @keyup.enter.native="handleLogin"
         />
         <span class="show-pwd" @click="showPwd">
           <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'"/>
@@ -129,8 +130,7 @@ export default {
           this.$store
             .dispatch("user/login", this.loginForm)
             .then(() => {
-              this.$router.push({ path: this.redirect || "/" });
-              this.loading = false;
+              this.$router.push({ path: this.redirect || "/" });              
             })
             .catch(() => {
               this.loading = false;

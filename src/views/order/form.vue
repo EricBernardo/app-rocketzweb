@@ -14,7 +14,7 @@
             <el-option
               v-for="item in clients"
               :key="item.id"
-              :label="(role == 'root' ? item.company.title + ' / ' : '') + item.title"
+              :label="(role == 'root' ? item.company.title + ' - ' : '') + item.title"
               :value="item.id"
             ></el-option>
           </el-select>
@@ -39,7 +39,7 @@
                 <el-option
                   v-for="item in products"
                   :key="item.id"
-                  :label="(role == 'root' ? item.category.company.title + ' / ' : '') + item.title"
+                  :label="(role == 'root' ? item.category.company.title + ' - ' : '') + item.title"
                   :value="item.id"
                 ></el-option>
               </el-select>
