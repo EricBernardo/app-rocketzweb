@@ -23,7 +23,7 @@
             placeholder="Data final"
           ></el-date-picker>
         </el-form-item>
-        <el-form-item label="Empresa" prop="company_id" v-if="this.companies.length">
+        <el-form-item label="Empresas" prop="company_id" v-if="this.companies.length">
           <el-select filterable v-model="company_id" :disabled="loading">
             <el-option :label="Selecione" :value="null"></el-option>
             <el-option
@@ -34,7 +34,7 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="Cliente" prop="company_id" v-if="this.clients.length">
+        <el-form-item label="Clientes" prop="company_id" v-if="this.clients.length">
           <el-select filterable v-model="client_id" :disabled="loading">
             <el-option :label="Selecione" :value="null"></el-option>
             <el-option v-for="item in clients" :key="item.id" :label="item.title" :value="item.id"></el-option>

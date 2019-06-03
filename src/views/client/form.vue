@@ -212,6 +212,7 @@ export default {
     },
     getCep() {
       let __this = this;
+      __this.loading = true;
       getCEP(this.form.cep).then(response => {
         if (response.data.data) {
           let form = this.form;
@@ -225,6 +226,7 @@ export default {
             }
           });
         }
+        __this.loading = false;
       });
     }
   }
