@@ -5,7 +5,7 @@
       class="pull-right m-b-10"
       size="mini"
       @click="addProduct()"
-      :disabled="!this.products.length"
+      :loading="!this.products.length"
     >Adicionar produto</el-button>
     <el-form :model="form" :rules="rules" ref="form" @submit.native.prevent>
       <el-col :md="6" :sm="24">
@@ -109,7 +109,7 @@
           <el-button
             size="mini"
             type="primary"
-            :loading="loading"
+            :loading="loading || !this.products.length"
             class="pull-right"
             @click="onSubmit('form')"
           >Salvar</el-button>
