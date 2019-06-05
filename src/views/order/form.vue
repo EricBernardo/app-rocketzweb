@@ -39,7 +39,7 @@
                 <el-option
                   v-for="item in products"
                   :key="item.id"
-                  :label="(role == 'root' ? item.category.company.title + ' - ' : '') + item.title"
+                  :label="(role == 'root' ? item.category.company.title + ' - ' : '') + (item.title.indexOf(item.category.title) === -1 ? (item.category.title + ' - ') : '') + item.title"
                   :value="item.id"
                 ></el-option>
               </el-select>
