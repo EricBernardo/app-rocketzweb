@@ -8,10 +8,11 @@ export function get(params) {
   })
 }
 
-export function getAllClients() {
+export function getAllClients(params = {}) {  
   return request({
     url: '/client/all',
-    method: 'get'
+    method: 'get',
+    params
   })
 }
 

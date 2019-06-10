@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-form :model="form" :rules="rules" ref="form" @submit.native.prevent label-width="120px">
+    <el-form :model="form" :rules="rules" ref="form" @submit.native.prevent>
       <el-row :gutter="10">
         <el-col :md="12" :sm="24">
           <el-form-item label="Empresa" prop="company_id" v-if="role=='root'">

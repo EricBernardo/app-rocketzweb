@@ -21,6 +21,9 @@ const mutations = {
   },
   SET_ROLE: (state, role) => {
     state.role = role
+  },
+  SET_PROFILE: (state, profile) => {
+    state.profile = profile
   }
 }
 
@@ -68,12 +71,14 @@ const actions = {
         const {
           name,
           avatar,
-          role
+          role,
+          company_id
         } = data
 
         commit('SET_NAME', name)
         commit('SET_AVATAR', avatar)
         commit('SET_ROLE', role)
+        commit('SET_PROFILE', data)
         resolve(data)
       }).catch(error => {
         reject(error)
