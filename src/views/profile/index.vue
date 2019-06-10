@@ -171,7 +171,7 @@ export default {
         this.companies = response.data.data;
       });
     }
-    if (this.role == "administrator") {
+    if (this.role == "root" || this.role == "administrator") {
       this.rolesUser.push({ value: "administrator", label: "Administrador" });
     }
     if (this.role == "root" || this.role == "administrator") {

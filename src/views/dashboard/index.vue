@@ -101,20 +101,26 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["role", "profile"])
+    ...mapGetters(["profile"])
   },
   created() {
     this.get();
-    if (this.role == "root" || this.role == "administrator") {
+    if (this.profile.role == "root") {
       getAllCompany().then(response => {
         response.data.data.unshift({null: 'Selecione'});
         this.companies = response.data.data;
+      });
+    }
+    if (this.profile.role == "administrator") {
+      getAllClients().then(response => {
+        response.data.data.unshift({null: 'Selecione'});
+        this.clients = response.data.data;
       });
     } 
   },
   methods: {
     getAllClients(){
-      if (this.role == "root") {        
+      if (this.profile.role == "root") {        
         this.clients = [];
         this.client_id = null;
         if(this.company_id) {
