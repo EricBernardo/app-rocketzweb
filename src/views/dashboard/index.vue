@@ -30,8 +30,7 @@
           </el-col>
           <el-col :md="6" :sm="24">
             <el-form-item label="Empresa" prop="company_id" v-if="this.companies.length">
-              <el-select filterable v-model="company_id" :disabled="loading" @change="getAllClients()">
-                <!-- <el-option :label="Selecione" :value="null"></el-option> -->
+              <el-select clearable filterable v-model="company_id" :disabled="loading" @change="getAllClients()">                
                 <el-option
                   v-for="item in companies"
                   :key="item.id"
@@ -43,8 +42,7 @@
           </el-col>
           <el-col :md="6" :sm="24">
             <el-form-item label="Cliente" prop="company_id" v-if="this.clients.length">
-              <el-select filterable v-model="client_id" :disabled="loading">
-                <!-- <el-option :label="Selecione" :value="null"></el-option> -->
+              <el-select clearable filterable v-model="client_id" :disabled="loading">                
                 <el-option
                   v-for="item in clients"
                   :key="item.id"
@@ -106,14 +104,12 @@ export default {
   created() {
     this.get();
     if (this.profile.role == "root") {
-      getAllCompany().then(response => {
-        response.data.data.unshift({null: 'Selecione'});
+      getAllCompany().then(response => {        
         this.companies = response.data.data;
       });
     }
     if (this.profile.role == "administrator") {
-      getAllClients().then(response => {
-        response.data.data.unshift({null: 'Selecione'});
+      getAllClients().then(response => {        
         this.clients = response.data.data;
       });
     } 
@@ -124,8 +120,7 @@ export default {
         this.clients = [];
         this.client_id = null;
         if(this.company_id) {
-          getAllClients({company_id:this.company_id}).then(response => {
-            response.data.data.unshift({null: 'Selecione'});
+          getAllClients({company_id:this.company_id}).then(response => {            
             this.clients = response.data.data;
           });
         }
