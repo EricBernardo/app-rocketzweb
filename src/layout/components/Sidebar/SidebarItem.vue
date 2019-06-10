@@ -4,7 +4,7 @@
       v-if="hasOneShowingChild(item.children,item) && (!onlyOneChild.children||onlyOneChild.noShowingChildren)&&!item.alwaysShow"
     >
       <app-link
-        v-if="onlyOneChild.meta && onlyOneChild.roles.find(value => value === role)"
+        v-if="onlyOneChild.meta && onlyOneChild.roles.find(value => value === profile.role)"
         :to="resolvePath(onlyOneChild.path)"
       >
         <el-menu-item
@@ -47,7 +47,7 @@ export default {
   name: "SidebarItem",
   components: { Item, AppLink },
   computed: {
-    ...mapGetters(["role"])
+    ...mapGetters(["profile"])
   },
   mixins: [FixiOSBug],
   props: {

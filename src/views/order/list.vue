@@ -4,7 +4,7 @@
       <el-button type="success" class="pull-right m-b-10" size="mini">Cadastrar</el-button>
     </router-link>
     <el-table v-loading="listLoading" :data="list.data" element-loading-text="Carregando..." border>
-      <el-table-column label="Empresa" v-if="role == 'root'">
+      <el-table-column label="Empresa" v-if="profile.role == 'root'">
         <template
           slot-scope="scope"
         >{{ scope.row.client.company ? scope.row.client.company.title : '' }}</template>
@@ -59,7 +59,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["role"])
+    ...mapGetters(["profile"])
   },
   created() {
     this.fetchData();

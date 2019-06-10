@@ -165,17 +165,17 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["role"])
+    ...mapGetters(["profile"])
   },
   created() {
-    if (this.role == "root") {
+    if (this.profile.role == "root") {
       this.rolesUser.push({ value: "root", label: "Root" });
       getAllCompany().then(response => {
         this.companies = response.data.data;
       });
     }
 
-    if (this.role == "root" || this.role == "administrator") {
+    if (this.profile.role == "root" || this.profile.role == "administrator") {
       getAllClients().then(response => {
         this.clients = response.data.data;
       });

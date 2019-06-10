@@ -18,10 +18,7 @@ const mutations = {
   },
   SET_AVATAR: (state, avatar) => {
     state.avatar = avatar
-  },
-  SET_ROLE: (state, role) => {
-    state.role = role
-  },
+  }, 
   SET_PROFILE: (state, profile) => {
     state.profile = profile
   }
@@ -76,8 +73,7 @@ const actions = {
         } = data
 
         commit('SET_NAME', name)
-        commit('SET_AVATAR', avatar)
-        commit('SET_ROLE', role)
+        commit('SET_AVATAR', avatar) 
         commit('SET_PROFILE', data)
         resolve(data)
       }).catch(error => {
@@ -94,7 +90,7 @@ const actions = {
     return new Promise((resolve, reject) => {
       commit('SET_TOKEN', '')
       commit('SET_NAME', '')
-      commit('SET_ROLE', '')
+      commit('SET_PROFILE', '')
       removeToken()
       resetRouter()
       resolve()

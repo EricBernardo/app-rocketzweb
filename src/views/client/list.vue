@@ -5,7 +5,7 @@
     </router-link>
 
     <el-table v-loading="listLoading" :data="list.data" element-loading-text="Carregando..." border>
-      <el-table-column label="Empresa" v-if="role == 'root'">
+      <el-table-column label="Empresa" v-if="profile.role == 'root'">
         <template slot-scope="scope">{{ scope.row.company ? scope.row.company.title : '' }}</template>
       </el-table-column>
       <el-table-column label="Título">
@@ -49,7 +49,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["role"])
+    ...mapGetters(["profile"])
   },
   created() {
     this.fetchData();

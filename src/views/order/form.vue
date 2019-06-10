@@ -14,7 +14,7 @@
             <el-option
               v-for="item in clients"
               :key="item.id"
-              :label="(role == 'root' ? item.company.title + ' - ' : '') + item.title"
+              :label="(profile.role == 'root' ? item.company.title + ' - ' : '') + item.title"
               :value="item.id"
             ></el-option>
           </el-select>
@@ -39,7 +39,7 @@
                 <el-option
                   v-for="item in products"
                   :key="item.id"
-                  :label="(role == 'root' ? item.category.company.title + ' - ' : '') + (item.title.indexOf(item.category.title) === -1 ? (item.category.title + ' - ') : '') + item.title"
+                  :label="(profile.role == 'root' ? item.category.company.title + ' - ' : '') + (item.title.indexOf(item.category.title) === -1 ? (item.category.title + ' - ') : '') + item.title"
                   :value="item.id"
                 ></el-option>
               </el-select>
@@ -163,12 +163,12 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["role"])
+    ...mapGetters(["profile"])
   },
   created() {
     let form = this.form;
 
-    if (this.role == "root" || this.role == "administrator") {
+    if (this.profile.role == "root" || this.profile.role == "administrator") {
       getAllClients().then(response => {
         this.clients = response.data.data;
       });

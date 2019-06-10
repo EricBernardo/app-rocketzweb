@@ -29,8 +29,8 @@
             </el-form-item>
           </el-col>
           <el-col :md="6" :sm="24">
-            <el-form-item label="Empresa" prop="company_id" v-if="this.companies.length">
-              <el-select clearable filterable v-model="company_id" :disabled="loading" @change="getAllClients()">                
+            <el-form-item label="Empresa" prop="company_id" v-if="profile.role == 'root'">
+              <el-select clearable filterable v-model="company_id" :disabled="!this.companies.length" @change="getAllClients()">                
                 <el-option
                   v-for="item in companies"
                   :key="item.id"
@@ -41,8 +41,8 @@
             </el-form-item>
           </el-col>
           <el-col :md="6" :sm="24">
-            <el-form-item label="Cliente" prop="company_id" v-if="this.clients.length">
-              <el-select clearable filterable v-model="client_id" :disabled="loading">                
+            <el-form-item label="Cliente" prop="company_id" v-if="profile.role == 'root' || profile.role == 'administrator'">
+              <el-select clearable filterable v-model="client_id" :disabled="!this.clients.length">                
                 <el-option
                   v-for="item in clients"
                   :key="item.id"

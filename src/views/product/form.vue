@@ -8,7 +8,7 @@
               <el-option
                 v-for="item in categories"
                 :key="item.id"
-                :label="(role == 'root' ? item.company.title + ' - ' : '') + item.title"
+                :label="(profile.role == 'root' ? item.company.title + ' - ' : '') + item.title"
                 :value="item.id"
               ></el-option>
             </el-select>
@@ -88,7 +88,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["role"])
+    ...mapGetters(["profile"])
   },
   created() {
     getAllProductCategories().then(response => {

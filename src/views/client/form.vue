@@ -3,7 +3,7 @@
     <el-form :model="form" :rules="rules" ref="form" @submit.native.prevent>
       <el-row :gutter="10">
         <el-col :md="12" :sm="24">
-          <el-form-item label="Empresa" prop="company_id" v-if="role=='root'">
+          <el-form-item label="Empresa" prop="company_id" v-if="profile.role=='root'">
             <el-select filterable v-model="form.company_id" :disabled="loading">
               <el-option
                 v-for="item in companies"
@@ -184,14 +184,14 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["role"])
+    ...mapGetters(["profile"])
   },
   created() {
     getStates().then(response => {
       this.states = response.data.data;
     });
 
-    if (this.role == "root") {
+    if (this.profile.role == "root") {
       getAllCompany().then(response => {
         this.companies = response.data.data;
       });
