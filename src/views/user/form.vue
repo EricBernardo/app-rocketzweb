@@ -4,7 +4,13 @@
       <el-row :gutter="10">
         <el-col :md="12" :sm="24">
           <el-form-item label="Papel" prop="role" v-if="rolesUser.length">
-            <el-select filterable :disabled="loading" v-model="form.role" placeholder="Select">
+            <el-select
+              filterable
+              :disabled="loading"
+              v-model="form.role"
+              placeholder="Select"
+              @change="getAllClients()"
+            >
               <el-option
                 v-for="item in rolesUser"
                 :key="item.value"
@@ -20,7 +26,12 @@
             prop="company_id"
             v-if="companies.length && (this.form.role == 'administrator' || this.form.role == 'client')"
           >
-            <el-select filterable :disabled="loading" v-model="form.company_id">
+            <el-select
+              filterable
+              :disabled="loading"
+              v-model="form.company_id"
+              @change="getAllClients()"
+            >
               <el-option
                 v-for="item in companies"
                 :key="item.id"
@@ -31,12 +42,8 @@
           </el-form-item>
         </el-col>
         <el-col :md="12" :sm="24">
-          <el-form-item
-            label="Cliente"
-            prop="client_id"
-            v-if="clients.length && this.form.role == 'client'"
-          >
-            <el-select filterable :disabled="loading" v-model="form.client_id">
+          <el-form-item label="Cliente" prop="client_id" v-if="this.form.role == 'client'">
+            <el-select filterable :disabled="loading || !clients.length" v-model="form.client_id">
               <el-option
                 v-for="item in clients"
                 :key="item.id"
@@ -175,7 +182,7 @@ export default {
       });
     }
 
-    if (this.profile.role == "root" || this.profile.role == "administrator") {
+    if (this.profile.role == "administrator") {
       getAllClients().then(response => {
         this.clients = response.data.data;
       });
@@ -184,6 +191,15 @@ export default {
     this.getUser();
   },
   methods: {
+    getAllClients() {
+      this.clients = [];
+      if (this.form.company_id) {
+        this.form.client_id = null;
+        getAllClients({ company_id: this.form.company_id }).then(response => {
+          this.clients = response.data.data;
+        });
+      }
+    },
     getUser() {
       if (this.$route.params.id) {
         this.loading = true;
@@ -191,6 +207,11 @@ export default {
           Object.keys(this.form).forEach(key => {
             this.form[key] = response.data.data[key];
           });
+
+          getAllClients({ company_id: this.form.company_id }).then(response => {
+            this.clients = response.data.data;
+          });
+
           this.loading = false;
         });
       }

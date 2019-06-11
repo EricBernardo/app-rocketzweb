@@ -240,8 +240,8 @@ export default {
         let form = this.form;
         if (change) {
           form.city_id = null;
-          if (city) {
-            Object.values(this.cities).forEach(function(item) {
+          if (city) {            
+            this.cities.map(function(item) {
               if (item.name == city) {
                 form.city_id = item.id;
               }
@@ -264,11 +264,11 @@ export default {
       __this.form.city_id = null;
 
       getCEP(this.form.cep)
-        .then(response => {
+        .then(response => {          
           if (response.data.data) {
             __this.form.neighborhood = response.data.data.bairro;
             __this.form.address = response.data.data.logradouro;
-            Object.values(__this.states).forEach(function(state) {
+            __this.states.map(function(state) {
               if (state.abbr == response.data.data.uf) {
                 __this.form.state_id = state.id;
                 __this.getCities(

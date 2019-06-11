@@ -82,7 +82,7 @@ service.interceptors.response.use(
           text += '<hr style="height:1px;border:none;color:red;background-color:red;" />';
         }
 
-        values.forEach(function (value) {
+        values.map(function (value) {
           text += '<p>' + value + '</p>'
         })
 

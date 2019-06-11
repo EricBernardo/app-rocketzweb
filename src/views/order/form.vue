@@ -187,7 +187,7 @@ export default {
         this.loading = true;
         show(this.$route.params.id).then(response => {
           form.products = [];
-          Object.values(response.data.products).forEach(product => {
+          response.data.products.map(product => {
             form.products.push({
               id: product.pivot.id,
               product_id: product.id,
@@ -212,7 +212,7 @@ export default {
     calculateProduct(row) {
       if (!row.block) {
         let price = 0;
-        Object.values(this.products).forEach(function(value) {
+        this.products.map(function(value) {
           if (value.id == row.product_id) {
             price = value.price;
           }
@@ -227,7 +227,7 @@ export default {
       let form = this.form;
       form.subtotal = 0;
       form.total = 0;
-      Object.values(form.products).forEach(function(value) {
+      form.products.map(function(value) {
         total += value.total;
       });
       form.discount = Math.abs(form.discount);
