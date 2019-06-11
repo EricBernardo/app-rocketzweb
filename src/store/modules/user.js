@@ -4,23 +4,15 @@ import { getToken, removeToken, setToken } from '@/utils/auth';
 
 const state = {
   token: getToken(),
-  name: '',
-  avatar: '',
-  role: ''
+  profile: ''
 }
 
 const mutations = {
   SET_TOKEN: (state, token) => {
     state.token = token
   },
-  SET_NAME: (state, name) => {
-    state.name = name
-  },
-  SET_AVATAR: (state, avatar) => {
-    state.avatar = avatar
-  }, 
   SET_PROFILE: (state, profile) => {
-    state.profile = profile
+    state.profile = profile    
   }
 }
 
@@ -50,6 +42,10 @@ const actions = {
     })
   },
 
+  setProfile({ commit }, profile) {  
+    commit('SET_PROFILE', profile)
+  },
+
   // get user info
   getProfile({
     commit,
@@ -60,20 +56,9 @@ const actions = {
         const {
           data
         } = response.data
-
         if (!data) {
           reject('Verification failed, please Login again.')
         }
-
-        const {
-          name,
-          avatar,
-          role,
-          company_id
-        } = data
-
-        commit('SET_NAME', name)
-        commit('SET_AVATAR', avatar) 
         commit('SET_PROFILE', data)
         resolve(data)
       }).catch(error => {
@@ -89,7 +74,6 @@ const actions = {
   }) {
     return new Promise((resolve, reject) => {
       commit('SET_TOKEN', '')
-      commit('SET_NAME', '')
       commit('SET_PROFILE', '')
       removeToken()
       resetRouter()

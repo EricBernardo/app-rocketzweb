@@ -1,51 +1,7 @@
 <template>
   <div class="app-container">
-    <el-form :model="form" :rules="rules" ref="form" @submit.native.prevent>
-      <el-row :gutter="10">
-        <el-col :md="24" :sm="24">
-          <el-form-item label="Papel" prop="role" v-if="rolesUser.length">
-            <el-select filterable :disabled="loading" v-model="form.role" placeholder="Select">
-              <el-option
-                v-for="item in rolesUser"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              ></el-option>
-            </el-select>
-          </el-form-item>
-        </el-col>
-        <el-col :md="12" :sm="24">
-          <el-form-item
-            label="Empresa"
-            prop="company_id"
-            v-if="companies.length && (this.form.role == 'administrator' || this.form.role == 'client')"
-          >
-            <el-select filterable :disabled="loading" v-model="form.company_id">
-              <el-option
-                v-for="item in companies"
-                :key="item.id"
-                :label="item.title"
-                :value="item.id"
-              ></el-option>
-            </el-select>
-          </el-form-item>
-        </el-col>
-        <el-col :md="12" :sm="24">
-          <el-form-item
-            label="Cliente"
-            prop="client_id"
-            v-if="clients.length && this.form.role == 'client'"
-          >
-            <el-select filterable :disabled="loading" v-model="form.client_id">
-              <el-option
-                v-for="item in clients"
-                :key="item.id"
-                :label="item.title"
-                :value="item.id"
-              ></el-option>
-            </el-select>
-          </el-form-item>
-        </el-col>
+    <el-form :model="form" :rules="rules" ref="form" @submit.native.prevent>      
+      <el-row :gutter="10"> 
         <el-col :md="12" :sm="24">
           <el-form-item label="Nome" prop="name">
             <el-input :disabled="loading" v-model="form.name"></el-input>
@@ -86,26 +42,18 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations } from "vuex";
-import { getAllCompany } from "@/api/company";
-import { getAllClients } from "@/api/client";
 import { getProfile, saveProfile } from "@/api/user";
 
 export default {
   data() {
     return {
-      companies: [],
-      clients: [],
-      rolesUser: [{ value: "client", label: "Cliente" }],
       loading: false,
       form: {
         name: null,
         email: null,
         password: null,
         password_confirmation: null,
-        role: null,
-        client_id: null,
-        company_id: null
+        role: null
       },
       rules: {
         name: [
@@ -128,12 +76,6 @@ export default {
             message: "Campo deve conter no mínimo 8 caracteres"
           }
         ],
-        role: [
-          {
-            required: true,
-            message: "Campo obrigatório"
-          }
-        ],
         password_confirmation: [
           {
             validator: (rule, value, callback) => {
@@ -145,66 +87,42 @@ export default {
             },
             trigger: "blur"
           }
-        ],
-        company_id: [
-          {
-            required: true,
-            message: "Campo obrigatório"
-          }
-        ],
-        client_id: [
-          {
-            required: true,
-            message: "Campo obrigatório"
-          }
         ]
       }
     };
   },
-  computed: {
-    ...mapGetters(["profile"])
-  },
   created() {
-    if (this.profile.role == "root") {
-      this.rolesUser.push({ value: "root", label: "Root" });
-      getAllCompany().then(response => {
-        this.companies = response.data.data;
-      });
-    }
-    if (this.profile.role == "root" || this.profile.role == "administrator") {
-      this.rolesUser.push({ value: "administrator", label: "Administrador" });
-    }
-    if (this.profile.role == "root" || this.profile.role == "administrator") {
-      getAllClients().then(response => {
-        this.clients = response.data.data;
-      });
-    }
-    this.getProfile();
+    this.getProfile();    
   },
   methods: {
     getProfile() {
-      this.loading = true;
+      let __this = this;
+      __this.loading = true;
       getProfile().then(response => {
-        Object.keys(this.form).forEach(key => {
-          this.form[key] = response.data.data[key];
+        Object.keys(__this.form).forEach(key => {
+          __this.form[key] = response.data.data[key];
         });
-        this.loading = false;
+        __this.$store.dispatch("user/setProfile", __this.form);
+        __this.loading = false;
       });
     },
     onSubmit(formName) {
-      this.$refs[formName].validate(valid => {
+      let __this = this;
+      __this.$refs[formName].validate(valid => {
         if (valid) {
-          this.loading = true;
-          saveProfile(this.form)
+          __this.loading = true;
+          saveProfile(__this.form)
             .then(response => {
-              this.$message({
+              __this.$message({
                 message: "Salvo com sucesso",
                 type: "success",
                 duration: 5 * 1000
-              });
+              });  
+              __this.form.password = null;
+              __this.form.password_confirmation = null;            
             })
             .finally(responde => {
-              this.loading = false;
+              __this.loading = false;
             });
         }
       });

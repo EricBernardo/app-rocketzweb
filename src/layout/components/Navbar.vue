@@ -9,7 +9,7 @@
     <breadcrumb class="breadcrumb-container"/>
 
     <div class="right-menu">
-      {{name}}
+      {{profile.name}}
       <el-dropdown class="avatar-container" trigger="click">
         <div class="avatar-wrapper">
           <svg-icon icon-class="user"/>
@@ -39,7 +39,7 @@ export default {
     Hamburger
   },
   computed: {
-    ...mapGetters(["sidebar", "name"])
+    ...mapGetters(["sidebar", "profile"])
   },
   methods: {
     toggleSideBar() {
