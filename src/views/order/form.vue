@@ -9,7 +9,7 @@
 		>Adicionar produto</el-button>
 		<el-form :model="form" :rules="rules" ref="form" @submit.native.prevent>
 			<el-col :md="6" :sm="24">
-				<el-form-item label="Empresas" prop="company_id" v-if="companies.length">
+				<el-form-item class="order-company" label="Empresas" prop="company_id" v-if="companies.length">
 					<el-select v-model="form.company_id" :disabled="loading" filterable @change="changeCompany()">
 						<el-option v-for="item in companies" :key="item.id" :label="item.title" :value="item.id"></el-option>
 					</el-select>
