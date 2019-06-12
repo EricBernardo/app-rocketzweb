@@ -1,4 +1,4 @@
-import request from '@/utils/request';
+import request from '@/utils/request'
 
 export function get(params) {
   return request({
@@ -8,7 +8,7 @@ export function get(params) {
   })
 }
 
-export function getAllClients(params = {}) {  
+export function getAllClients(params) {
   return request({
     url: '/client/all',
     method: 'get',

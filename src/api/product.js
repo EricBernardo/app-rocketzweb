@@ -1,4 +1,4 @@
-import request from '@/utils/request';
+import request from '@/utils/request'
 
 export function get(params) {
   return request({
@@ -8,10 +8,11 @@ export function get(params) {
   })
 }
 
-export function getAllProducts() {
+export function getAllProducts(params) {
   return request({
     url: '/product/all',
-    method: 'get'
+    method: 'get',
+    params
   })
 }
 

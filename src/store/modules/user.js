@@ -1,6 +1,6 @@
-import { getProfile, login } from '@/api/user';
-import { resetRouter } from '@/router';
-import { getToken, removeToken, setToken } from '@/utils/auth';
+import { getProfile, login } from '@/api/user'
+import { resetRouter } from '@/router'
+import { getToken, removeToken, setToken } from '@/utils/auth'
 
 const state = {
   token: getToken(),
@@ -12,7 +12,7 @@ const mutations = {
     state.token = token
   },
   SET_PROFILE: (state, profile) => {
-    state.profile = profile    
+    state.profile = profile
   }
 }
 
@@ -42,7 +42,7 @@ const actions = {
     })
   },
 
-  setProfile({ commit }, profile) {  
+  setProfile({ commit }, profile) {
     commit('SET_PROFILE', profile)
   },
 
