@@ -131,6 +131,11 @@
           <money v-model="form.total" :readonly="true" class="el-input__inner"></money>
         </el-form-item>
       </el-col>
+      <el-col :md="24" :sm="24">
+        <el-form-item label="Observação" prop="observation">
+          <el-input type="textarea" v-model="form.observation" :disabled="loading" :rows="5"></el-input>
+        </el-form-item>
+      </el-col>
       <el-col class="line" :span="24">
         <el-form-item>
           <router-link :to="{ name: 'order' }" class="pull-left">
@@ -170,7 +175,8 @@ export default {
         paid: false,
         subtotal: 0,
         total: 0,
-        date: null
+        date: null,
+        observation: null,
       },
       rules: {
         client_id: [
@@ -267,6 +273,7 @@ export default {
           __this.form.subtotal = response.data.data.subtotal;
           __this.form.total = response.data.data.total;
           __this.form.date = response.data.data.date;
+          __this.form.observation = response.data.data.observation;
           __this.setClientsCompanies(false);
           __this.loading = false;
         });

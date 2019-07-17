@@ -20,6 +20,11 @@
           </el-form-item>
         </el-col>
         <el-col :md="12" :sm="24">
+          <el-form-item label="Telefone" prop="phone">
+            <el-input v-model="form.phone" :disabled="loading"></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :md="12" :sm="24">
           <el-form-item label="CNPJ" prop="cnpj" v-mask="'##.###.###/####-##'">
             <el-input v-model="form.cnpj" :disabled="loading"></el-input>
           </el-form-item>
@@ -78,6 +83,12 @@
             ></el-input-number>
           </el-form-item>
         </el-col>
+        
+        <el-col :md="24" :sm="24">
+          <el-form-item label="Complemento" prop="complement">
+            <el-input type="textarea" v-model="form.complement" :disabled="loading" :rows="5"></el-input>
+          </el-form-item>
+        </el-col>
         <el-col :md="24" :sm="24">
           <el-form-item>
             <router-link to="/client" class="pull-left">
@@ -123,7 +134,9 @@ export default {
         city_id: null,
         cnpj: null,
         neighborhood: null,
-        number: null
+        number: null,
+        phone: null,
+        complement: null,
       },
       rules: {
         company_id: [
