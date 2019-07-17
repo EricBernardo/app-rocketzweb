@@ -162,12 +162,6 @@ export default {
             message: "Campo obrigatório"
           }
         ],
-        cnpj: [
-          {
-            required: true,
-            message: "Campo obrigatório"
-          }
-        ],
         neighborhood: [
           {
             required: true,
