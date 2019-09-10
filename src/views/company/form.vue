@@ -8,12 +8,9 @@
 				<el-upload
 					class="cert_file"
 					:action="`${base_api}/company/file`"
-					:headers="{'Authorization': 'Bearer ' + token }"
-					:file-list="[
-                  {
-                    name: form.cert_file
-                  }
-                ]"
+					:headers="{'Authorization': 'Bearer ' + token, 'Accept': 'application/json' }"
+					:file-list="fileList"
+					:on-error="handleUploadError"
 					:limit="1"
 				>
 					<el-button size="small" type="default" :disabled="loading">Arquivo</el-button>
@@ -46,6 +43,7 @@
 	export default {
 		data() {
 			return {
+				fileList: [],
 				token: getToken(),
 				base_api: process.env.VUE_APP_BASE_API,
 				loading: false,
@@ -67,15 +65,35 @@
 		created() {
 			if (this.$route.params.id) {
 				this.loading = true;
+				this.fileList = [];
 				show(this.$route.params.id).then(response => {
 					Object.keys(this.form).forEach(key => {
 						this.form[key] = response.data.data[key];
+						if (key == "cert_file" && response.data.data[key]) {
+							this.fileList.push({ name: response.data.data[key] });
+						}
 					});
 					this.loading = false;
 				});
 			}
 		},
 		methods: {
+			handleUploadError(msg, file) {
+				if (msg.status !== 404) {
+					this.$notify.error({
+						title: "Upload Unsuccessful",
+						message:
+							"File [" + file.name + "] unable to uploaded: " + msg,
+						duration: 0
+					});
+				} else {
+					this.$notify.error({
+						title: "Path Not Found",
+						message: "No such path on the server to upload to",
+						duration: 0
+					});
+				}
+			},
 			onSubmit(formName) {
 				this.$refs[formName].validate(valid => {
 					if (valid) {
@@ -87,8 +105,20 @@
 									type: "success",
 									duration: 5 * 1000
 								});
+
+								this.fileList = [];
+
 								if (!this.$route.params.id) {
 									this.$refs[formName].resetFields();
+								} else {
+									if (
+										key == "cert_file" &&
+										this.form["cert_file"]
+									) {
+										this.fileList.push({
+											name: this.form["cert_file"]
+										});
+									}
 								}
 							})
 							.finally(responde => {
