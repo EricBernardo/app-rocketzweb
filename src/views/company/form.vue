@@ -11,6 +11,9 @@
 					:headers="{'Authorization': 'Bearer ' + token, 'Accept': 'application/json' }"
 					:file-list="fileList"
 					:on-error="handleUploadError"
+					:on-success="handleSuccess"
+					:on-remove="handleRemove"
+					:on-exceed="handleExceed"
 					:limit="1"
 				>
 					<el-button size="small" type="default" :disabled="loading">Arquivo</el-button>
@@ -36,9 +39,11 @@
 </template>
 
 <script>
-	import { show, save } from "@/api/company";
+	import { show, save, destroyFile } from "@/api/company";
 
 	import { getToken } from "@/utils/auth";
+
+	import { Message } from "element-ui";
 
 	export default {
 		data() {
@@ -70,7 +75,7 @@
 					Object.keys(this.form).forEach(key => {
 						this.form[key] = response.data.data[key];
 						if (key == "cert_file" && response.data.data[key]) {
-							this.fileList.push({ name: response.data.data[key] });
+							this.fileList.push({ name: "certificado.pfx" });
 						}
 					});
 					this.loading = false;
@@ -78,19 +83,32 @@
 			}
 		},
 		methods: {
+			handleExceed(files, fileList) {
+				this.$message.warning(`Para atualizar o arquivo, apague o atual.`);
+			},
+			handleRemove() {
+				this.form.cert_file = null;
+			},
+			handleSuccess(file) {
+				this.form.cert_file = file.data;
+				this.fileList = [];
+				this.fileList.push({ name: "certificado.pfx" });
+			},
 			handleUploadError(msg, file) {
 				if (msg.status !== 404) {
-					this.$notify.error({
-						title: "Upload Unsuccessful",
-						message:
-							"File [" + file.name + "] unable to uploaded: " + msg,
-						duration: 0
+					let obj = JSON.parse(msg.message);
+					Message({
+						message: obj.errors.file[0],
+						type: "error",
+						duration: 5 * 1000,
+						dangerouslyUseHTMLString: true
 					});
 				} else {
-					this.$notify.error({
-						title: "Path Not Found",
-						message: "No such path on the server to upload to",
-						duration: 0
+					Message({
+						message: "Ocorreu algum erro. Tente novamente mais tarde.",
+						type: "error",
+						duration: 5 * 1000,
+						dangerouslyUseHTMLString: true
 					});
 				}
 			},
@@ -116,7 +134,7 @@
 										this.form["cert_file"]
 									) {
 										this.fileList.push({
-											name: this.form["cert_file"]
+											name: "certificado.pfx"
 										});
 									}
 								}
