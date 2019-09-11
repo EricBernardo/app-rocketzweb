@@ -10,10 +10,12 @@
 					:action="`${base_api}/company/file`"
 					:headers="{'Authorization': 'Bearer ' + token, 'Accept': 'application/json' }"
 					:file-list="fileList"
+					:on-change="handleChange"
 					:on-error="handleUploadError"
 					:on-success="handleSuccess"
-					:on-remove="handleRemove"
 					:on-exceed="handleExceed"
+					:before-remove="beforeRemove"
+					:on-progress="handleProgress"
 					:limit="1"
 				>
 					<el-button size="small" type="default" :disabled="loading">Arquivo</el-button>
@@ -75,7 +77,7 @@
 					Object.keys(this.form).forEach(key => {
 						this.form[key] = response.data.data[key];
 						if (key == "cert_file" && response.data.data[key]) {
-							this.fileList.push({ name: "certificado.pfx" });
+							this.fileList.push({ name: response.data.data[key] });
 						}
 					});
 					this.loading = false;
@@ -83,22 +85,41 @@
 			}
 		},
 		methods: {
+			handleProgress(event, file, fileList) {
+				this.loading = true;
+			},
+			handleChange(event, file, fileList) {
+				this.loading = false;
+			},
 			handleExceed(files, fileList) {
 				this.$message.warning(`Para atualizar o arquivo, apague o atual.`);
 			},
-			handleRemove() {
-				this.form.cert_file = null;
+			beforeRemove(file) {
+				return this.$confirm(
+					`Desejas realmente excluir esse arquivo?`
+				).then(() => {
+					if (!this.$route.params.id && this.form.cert_file) {
+						this.loading = true;
+						destroyFile(file.name).then(response => {
+							this.loading = false;
+						});
+					}
+					this.form.cert_file = null;
+				});
 			},
 			handleSuccess(file) {
 				this.form.cert_file = file.data;
 				this.fileList = [];
-				this.fileList.push({ name: "certificado.pfx" });
+				this.fileList.push({ name: file.data });
 			},
 			handleUploadError(msg, file) {
 				if (msg.status !== 404) {
 					let obj = JSON.parse(msg.message);
 					Message({
-						message: obj.errors.file[0],
+						message:
+							obj.errors != undefined
+								? obj.errors.file[0]
+								: obj.message,
 						type: "error",
 						duration: 5 * 1000,
 						dangerouslyUseHTMLString: true
@@ -123,20 +144,9 @@
 									type: "success",
 									duration: 5 * 1000
 								});
-
-								this.fileList = [];
-
 								if (!this.$route.params.id) {
+									this.fileList = [];
 									this.$refs[formName].resetFields();
-								} else {
-									if (
-										key == "cert_file" &&
-										this.form["cert_file"]
-									) {
-										this.fileList.push({
-											name: "certificado.pfx"
-										});
-									}
 								}
 							})
 							.finally(responde => {

@@ -52,3 +52,11 @@ export function destroy(id) {
     method: 'delete'
   })
 }
+
+export function destroyFile(id) {
+  return request({
+    url: '/company/file',
+    method: 'delete',
+    data: { id: id }
+  })
+}
