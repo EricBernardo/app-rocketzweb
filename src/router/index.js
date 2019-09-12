@@ -142,23 +142,23 @@ export const constantRoutes = [{
   ]
 },
 {
-  path: '/product_category',
+  path: '/shipping_company',
   component: Layout,
   roles: ['root', 'administrator'],
   meta: {
-    title: 'Categoria',
-    icon: 'category'
+    title: 'Transportadora',
+    icon: 'shipping_company'
   },
   children: [{
     path: '',
-    name: 'product_category',
-    component: () => import('@/views/product_category/list'),
+    name: 'shipping_company',
+    component: () => import('@/views/shipping_company/list'),
     hidden: true
   },
   {
     path: 'create',
-    name: 'product_category.create',
-    component: () => import('@/views/product_category/form'),
+    name: 'shipping_company.create',
+    component: () => import('@/views/shipping_company/form'),
     hidden: true,
     meta: {
       title: 'Cadastrar'
@@ -166,8 +166,42 @@ export const constantRoutes = [{
   },
   {
     path: 'edit/:id',
-    name: 'product_category.edit',
-    component: () => import('@/views/product_category/form'),
+    name: 'shipping_company.edit',
+    component: () => import('@/views/shipping_company/form'),
+    hidden: true,
+    meta: {
+      title: 'Editar'
+    }
+  }
+  ]
+},
+{
+  path: '/shipping_company_vehicle',
+  component: Layout,
+  roles: ['root', 'administrator'],
+  meta: {
+    title: 'Veículo',
+    icon: 'truck'
+  },
+  children: [{
+    path: '',
+    name: 'shipping_company_vehicle',
+    component: () => import('@/views/shipping_company_vehicle/list'),
+    hidden: true
+  },
+  {
+    path: 'create',
+    name: 'shipping_company_vehicle.create',
+    component: () => import('@/views/shipping_company_vehicle/form'),
+    hidden: true,
+    meta: {
+      title: 'Cadastrar'
+    }
+  },
+  {
+    path: 'edit/:id',
+    name: 'shipping_company_vehicle.edit',
+    component: () => import('@/views/shipping_company_vehicle/form'),
     hidden: true,
     meta: {
       title: 'Editar'
