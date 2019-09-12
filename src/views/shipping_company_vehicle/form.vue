@@ -4,48 +4,42 @@
 			<el-row :gutter="10">
 				<el-col :md="12" :sm="24">
 					<el-form-item label="Empresa" prop="company_id" v-if="profile.role=='root'">
-						<el-select filterable v-model="form.company_id" :disabled="loading">
+						<el-select
+							filterable
+							v-model="form.company_id"
+							@change="setShippingCompany()"
+							:disabled="loading"
+						>
 							<el-option v-for="item in companies" :key="item.id" :label="item.title" :value="item.id"></el-option>
 						</el-select>
 					</el-form-item>
 				</el-col>
 				<el-col :md="12" :sm="24">
-					<el-form-item label="Título" prop="title">
-						<el-input v-model="form.title" :disabled="loading"></el-input>
+					<el-form-item label="Transportadora" prop="shipping_company_id">
+						<el-select
+							filterable
+							v-model="form.shipping_company_id"
+							:disabled="loading || !this.shipping_companies.length"
+						>
+							<el-option
+								v-for="item in shipping_companies"
+								:key="item.id"
+								:label="item.title"
+								:value="item.id"
+							></el-option>
+						</el-select>
 					</el-form-item>
 				</el-col>
 				<el-col :md="12" :sm="24">
-					<el-form-item label="CPF" prop="cpf" v-mask="'###.###.###-##'">
-						<el-input v-model="form.cpf" :disabled="loading"></el-input>
+					<el-form-item label="Placa" prop="board">
+						<el-input v-model="form.board" :disabled="loading" :maxlength="7"></el-input>
 					</el-form-item>
 				</el-col>
 				<el-col :md="12" :sm="24">
 					<el-form-item label="Estado" prop="state_id">
-						<el-select
-							filterable
-							v-model="form.state_id"
-							@change="getCities(true)"
-							:disabled="loading || loading_cities"
-						>
+						<el-select filterable v-model="form.state_id" :disabled="loading">
 							<el-option v-for="item in states" :key="item.id" :label="item.name" :value="item.id"></el-option>
 						</el-select>
-					</el-form-item>
-				</el-col>
-				<el-col :md="12" :sm="24">
-					<el-form-item label="Cidade" prop="city_id">
-						<el-select filterable v-model="form.city_id" :disabled="loading || loading_cities">
-							<el-option v-for="item in cities" :key="item.id" :label="item.name" :value="item.id"></el-option>
-						</el-select>
-					</el-form-item>
-				</el-col>
-				<el-col :md="12" :sm="24">
-					<el-form-item label="Endereço" prop="address">
-						<el-input v-model="form.address" :disabled="loading"></el-input>
-					</el-form-item>
-				</el-col>
-				<el-col :md="12" :sm="24">
-					<el-form-item label="IE" prop="ie">
-						<el-input v-model="form.ie" :disabled="loading"></el-input>
 					</el-form-item>
 				</el-col>
 				<el-col :md="24" :sm="24">
@@ -70,41 +64,24 @@
 <script>
 	import { mapGetters } from "vuex";
 	import { getStates } from "@/api/state";
-	import { getCities } from "@/api/city";
 	import { show, save } from "@/api/shipping_company_vehicle";
 	import { getAllCompany } from "@/api/company";
+	import { getAllShippingCompany } from "@/api/shipping_company";
 
 	export default {
 		data() {
 			return {
 				loading: false,
-				loading_cities: false,
 				states: [],
-				cities: [],
 				companies: [],
+				shipping_companies: [],
 				form: {
-					company_id: null,
-					title: null,
-					address: null,
+					shipping_company_id: null,
 					state_id: null,
-					city_id: null,
-					cpf: null,
-					ie: null
+					board: null
 				},
 				rules: {
-					company_id: [
-						{
-							required: true,
-							message: "Campo obrigatório"
-						}
-					],
-					title: [
-						{
-							required: true,
-							message: "Campo obrigatório"
-						}
-					],
-					address: [
+					shipping_company_id: [
 						{
 							required: true,
 							message: "Campo obrigatório"
@@ -116,19 +93,7 @@
 							message: "Campo obrigatório"
 						}
 					],
-					city_id: [
-						{
-							required: true,
-							message: "Campo obrigatório"
-						}
-					],
-					cpf: [
-						{
-							required: true,
-							message: "Campo obrigatório"
-						}
-					],
-					ie: [
+					board: [
 						{
 							required: true,
 							message: "Campo obrigatório"
@@ -148,21 +113,37 @@
 				getAllCompany().then(response => {
 					this.companies = response.data.data;
 				});
+			} else {
+				getAllShippingCompany().then(response => {
+					this.shipping_companies = response.data.data;
+				});
 			}
 			if (this.$route.params.id) {
 				this.loading = true;
 				show(this.$route.params.id).then(response => {
 					Object.keys(this.form).forEach(key => {
 						this.form[key] = response.data.data[key];
-						if (key == "state_id") {
-							this.getCities();
-						}
 					});
+					this.setShippingCompany(false);
 					this.loading = false;
 				});
 			}
 		},
 		methods: {
+			setShippingCompany(clear) {
+				if (this.profile.role == "root") {
+					let __this = this;
+					if (clear) {
+						__this.shipping_companies = [];
+						__this.form.shipping_company_id = null;
+					}
+					getAllShippingCompany({
+						company_id: __this.form.company_id
+					}).then(response => {
+						__this.shipping_companies = response.data.data;
+					});
+				}
+			},
 			onSubmit(formName) {
 				this.$refs[formName].validate(valid => {
 					if (valid) {
@@ -182,25 +163,6 @@
 								this.loading = false;
 							});
 					}
-				});
-			},
-			getCities(change = false, city = null) {
-				let __this = this;
-				__this.loading_cities = true;
-				getCities(this.form.state_id).then(response => {
-					this.cities = response.data.data;
-					let form = this.form;
-					if (change) {
-						form.city_id = null;
-						if (city) {
-							this.cities.map(function(item) {
-								if (item.name == city) {
-									form.city_id = item.id;
-								}
-							});
-						}
-					}
-					__this.loading_cities = false;
 				});
 			}
 		}
