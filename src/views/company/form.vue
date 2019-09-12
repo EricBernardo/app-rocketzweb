@@ -2,9 +2,28 @@
 	<div class="app-container">
 		<el-form :model="form" :rules="rules" ref="form" @submit.native.prevent>
 			<el-row :gutter="10">
-				<el-form-item label="Título" prop="title">
-					<el-input v-model="form.title" :disabled="loading"></el-input>
-				</el-form-item>
+				<el-col :md="12" :sm="24">
+					<el-form-item label="Título" prop="title">
+						<el-input v-model="form.title" :disabled="loading"></el-input>
+					</el-form-item>
+				</el-col>
+				<el-col :md="12" :sm="24">
+					<el-form-item label="Nome Fantasia" prop="title">
+						<el-input v-model="form.fantasy" :disabled="loading"></el-input>
+					</el-form-item>
+				</el-col>
+				<el-col :md="12" :sm="24">
+					<el-form-item label="IE" prop="title">
+						<el-input v-model="form.ie" :disabled="loading"></el-input>
+					</el-form-item>
+				</el-col>
+				<el-col :md="12" :sm="24">
+					<el-form-item label="CRT (Código regime tributário)" prop="crt">
+						<el-select filterable v-model="form.crt" :disabled="loading">
+							<el-option v-for="item in crts" :key="item.id" :label="item.name" :value="item.id"></el-option>
+						</el-select>
+					</el-form-item>
+				</el-col>
 				<el-col :md="12" :sm="24">
 					<el-form-item label="CNPJ" prop="cnpj" v-mask="'##.###.###/####-##'">
 						<el-input v-model="form.cnpj" :disabled="loading"></el-input>
@@ -88,7 +107,7 @@
 						<el-input v-model="form.cert_password" :disabled="loading"></el-input>
 					</el-form-item>
 				</el-col>
-				<el-col :md="12" :sm="24">
+				<el-col :md="24" :sm="24">
 					<el-form-item>
 						<router-link :to="{ name: 'company' }" class="pull-left">
 							<el-button size="mini">Voltar</el-button>
@@ -126,8 +145,24 @@
 				loading_cities: false,
 				states: [],
 				cities: [],
+				crts: [
+					{
+						id: 1,
+						name: "Simples Nacional"
+					},
+					{
+						id: 2,
+						name:
+							"Simples Nacional – excesso de sublimite da receita bruta"
+					},
+					{
+						id: 3,
+						name: "Regime Normal NOTAS EXPLICATIVAS"
+					}
+				],
 				form: {
 					title: null,
+					fantasy: null,
 					cert_password: null,
 					cert_file: null,
 					ie: null,
@@ -142,6 +177,12 @@
 				},
 				rules: {
 					title: [
+						{
+							required: true,
+							message: "Campo obrigatório"
+						}
+					],
+					fantasy: [
 						{
 							required: true,
 							message: "Campo obrigatório"
@@ -352,8 +393,12 @@
 </script>
 
 <style scoped>
+	.el-radio,
 	.cert_file {
 		width: 100%;
 		float: left;
+	}
+	.el-radio {
+		margin-top: 5px;
 	}
 </style>
