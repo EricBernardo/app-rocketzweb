@@ -4,12 +4,7 @@
 			<el-row :gutter="10">
 				<el-col :md="12" :sm="24">
 					<el-form-item label="Empresa" prop="company_id" v-if="profile.role=='root'">
-						<el-select
-							filterable
-							v-model="form.company_id"
-							@change="setShippingCompany()"
-							:disabled="loading"
-						>
+						<el-select filterable v-model="company_id" @change="setShippingCompany()" :disabled="loading">
 							<el-option v-for="item in companies" :key="item.id" :label="item.title" :value="item.id"></el-option>
 						</el-select>
 					</el-form-item>
@@ -75,6 +70,7 @@
 				states: [],
 				companies: [],
 				shipping_companies: [],
+				company_id: null,
 				form: {
 					shipping_company_id: null,
 					state_id: null,
@@ -124,13 +120,16 @@
 					Object.keys(this.form).forEach(key => {
 						this.form[key] = response.data.data[key];
 					});
+					this.company_id =
+						response.data.data.shipping_company.company.id;
+
 					this.setShippingCompany(false);
 					this.loading = false;
 				});
 			}
 		},
 		methods: {
-			setShippingCompany(clear) {
+			setShippingCompany(clear = true) {
 				if (this.profile.role == "root") {
 					let __this = this;
 					if (clear) {
@@ -138,7 +137,7 @@
 						__this.form.shipping_company_id = null;
 					}
 					getAllShippingCompany({
-						company_id: __this.form.company_id
+						company_id: __this.company_id
 					}).then(response => {
 						__this.shipping_companies = response.data.data;
 					});
@@ -156,6 +155,8 @@
 									duration: 5 * 1000
 								});
 								if (!this.$route.params.id) {
+									this.company_id = null;
+									this.shipping_companies = [];
 									this.$refs[formName].resetFields();
 								}
 							})
